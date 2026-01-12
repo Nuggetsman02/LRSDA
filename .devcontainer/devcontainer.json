@@ -1,0 +1,37 @@
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.106.0/containers/docker-existing-dockerfile
+{
+    "name": "lrs_data_analyst",
+    // Sets the run context to one level up instead of the .devcontainer folder.
+    // "context": "..",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    // The service in docker-compose.yml that we want vs code to use as a dev containers
+    "service": "lrs_data_analyst",
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    "forwardPorts": [
+        "8100:80"
+    ],
+    // "initializeCommand": "ssh-add $HOME/.ssh/gitlab_uliege",
+    // Add the IDs of extensions you want installed when the container is created.
+    "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "gruntfuggly.todo-tree",
+        "recca0120.vscode-phpunit",
+        "mblode.twig-language-2"
+        // "bierner.markdown-mermaid"
+    ],
+    // Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-in-docker.
+    "mounts": [
+        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+    ],
+    // Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
+    // "remoteUser": "vscode"
+    "workspaceFolder": "/workspace",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
+    // "postStartCommand": "/workspace/.devcontainer/setup/init.sh",
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/ash"
+    }
+}

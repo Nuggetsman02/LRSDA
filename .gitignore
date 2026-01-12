@@ -1,0 +1,4 @@
+.devcontainer/_sql
+logs/*
+composer.lock
+vendor/

@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  lrs_data_analyst:
+    build:
+      context: ./.devcontainer
+      dockerfile: Dockerfile
+    ports:
+      - 8100:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../LRSDA:/workspace
+    environment:
+      XDEBUG_CONFIG: remote_host=host.docker.internal
+    # depends_on:
+    #   - mysql
+    networks:
+      - lrsda-network
+  # mysql:
+  #   image: mariadb:latest
+  #   volumes:
+  #     - ./.devcontainer/_sql:/var/lib/mysql
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: rootpwd
+  #   networks:
+  #     - aca-network
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin:latest
+  #   ports:
+  #     - 8201:80
+  #   environment:
+  #     - PMA_HOST=mysql
+  #     - PMA_USER=root
+  #     - PMA_PASSWORD=rootpwd
+  #   depends_on:
+  #     - mysql
+  #   networks:
+  #     - aca-network
+networks:
+  lrsda-network:
+    name: lrsda-network
+    driver: bridge
