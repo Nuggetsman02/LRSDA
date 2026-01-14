@@ -3,8 +3,8 @@
 require(__DIR__ . '/../_config/config.php');
 require(__DIR__ . '/../vendor/autoload.php');
 
-use src\server\LRSConnectionCheck;
+use LRSDA\Server\LRSConnector\LRSConnectionCheck;
 
-$lrsChecker = new LRSConnectionCheck('endpoint', 'user', 'password');
+$lrsChecker = new LRSConnectionCheck();
 
 echo $lrsChecker->pingLRS() ? 'LRS is reachable.' : 'Failed to reach LRS.';
