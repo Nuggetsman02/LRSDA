@@ -1,50 +1,41 @@
 <?php
 
 namespace LRSDA\Server\LRSConnector;
-
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use LRSDA\Server\LRSConnector\Configuration;
-use Tincan\RemoteLRS;
 
 class LRSConnectionCheck
 {
-
     private Client $client;
 
-    // --------------------
-    // PROPERTIES
-    // --------------------
-    protected $lrs = null;
-    protected $toRemote = true;
-    protected $batchMode = false;
-    protected $statements = [];
-    // for debug purpose, i.e. deleting statements later on test execution
-    protected $statementsId = [];
     public function __construct()
     {
         $conf = Configuration::getInstance();
-        $this->lrs = new RemoteLRS(
-            $conf->xapi()['uri'],
-            '1.0.1',
-            $conf->xapi()['auth_key']
-        );
+        $xapi = $conf->xapi();
 
-        if (isset($GLOBALS['toRemote'])) {
-            $this->toRemote = $GLOBALS['toRemote'];
-        }
-        $this->batchMode = false;
+        $this->client = new Client([
+            'base_uri' => $xapi['uri'] . '/', // On s'assure qu'il y a un slash à la fin
+            'headers'  => [
+                'X-Experience-API-Version' => '1.0.1',
+                'Authorization'            => $xapi['auth_key'],
+                'Content-Type'             => 'application/json',
+            ],
+            'timeout'  => 15.0,
+            'http_errors' => true,
+        ]);
     }
 
     public function pingLRS(): bool
     {
         try {
-            $response = $this->client->get('statements', [
-                'query' => ['limit' => 1],
+            $response = $this->client->request('GET', 'statements', [
+                'query' => ['limit' => 1]
             ]);
+
+            return $response->getStatusCode() === 200;
         } catch (GuzzleException $e) {
             return false;
         }
-        return $response->getStatusCode() === 200;
     }
 }
