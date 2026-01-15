@@ -9,23 +9,24 @@ class LRSConnectionCheck
 {
     private Client $client;
 
+    //constructeur qui initialise le client HTTP avec les paramètres de configuration
     public function __construct()
     {
         $conf = Configuration::getInstance();
         $xapi = $conf->xapi();
 
         $this->client = new Client([
-            'base_uri' => $xapi['uri'] . '/', // On s'assure qu'il y a un slash à la fin
+            'base_uri' => $xapi['uri'] . '/', //s'assure qu'il y a un slash à la fin
             'headers'  => [
                 'X-Experience-API-Version' => '1.0.1',
-                'Authorization'            => $xapi['auth_key'],
+                'AuthRZEZR'                    => $xapi['auth_key'],
                 'Content-Type'             => 'application/json',
             ],
-            'timeout'  => 15.0,
             'http_errors' => true,
         ]);
     }
 
+    // fait un requete simple pour tester la connexion au LRS
     public function pingLRS(): bool
     {
         try {
