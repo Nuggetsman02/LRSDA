@@ -1,6 +1,7 @@
 <?php
 
 namespace LRSDA\Server\LRSConnector;
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use LRSDA\Server\LRSConnector\Configuration;
@@ -19,7 +20,7 @@ class LRSConnectionCheck
             'base_uri' => $xapi['uri'] . '/', //s'assure qu'il y a un slash à la fin
             'headers'  => [
                 'X-Experience-API-Version' => '1.0.1',
-                'AuthRZEZR'                    => $xapi['auth_key'],
+                'Auth'                    => $xapi['auth_key'],
                 'Content-Type'             => 'application/json',
             ],
             'http_errors' => true,

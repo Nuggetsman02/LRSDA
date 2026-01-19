@@ -26,7 +26,7 @@ class Configuration
     {
         $configFile = "config.json";
         if (!file_exists($configFile)) {
-            $configFile = "./" . $configFile;
+            $configFile = "../" . $configFile;
         }
         if (!file_exists($configFile)) {
             throw new \Exception("Unable to find configuration file.");

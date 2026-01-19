@@ -1,0 +1,149 @@
+:root {
+    --orange: #ff8c42;
+    --dark: #333;
+    --bg: #fff7ef;
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    font-family: Inter, system-ui, Arial, sans-serif;
+    margin: 0;
+    background: var(--bg);
+    color: var(--dark)
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: var(--orange);
+    color: #fff
+}
+
+.navbar h1 {
+    margin: 0;
+    font-size: 20px
+}
+
+.login-btn {
+    background: #fff;
+    color: var(--orange);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer
+}
+
+.container {
+    display: flex;
+    gap: 16px;
+    padding: 20px
+}
+
+.sidebar {
+    width: 260px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .06)
+}
+
+.date-filter h3,
+.generic-filters h3 {
+    margin: 0 0 8px 0
+}
+
+.date-filter label {
+    display: block;
+    font-size: 13px;
+    margin-top: 8px
+}
+
+.generic-filters .filter-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px
+}
+
+.filter-actions button {
+    flex: 1;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    background: var(--orange);
+    color: #fff;
+    cursor: pointer
+}
+
+#filter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0
+}
+
+#filter-list li {
+    padding: 6px 0;
+    border-bottom: 1px solid #f2f2f2
+}
+
+.content {
+    flex: 1
+}
+
+.table-container {
+    background: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .06)
+}
+
+#data-table {
+    width: 100%;
+    border-collapse: collapse
+}
+
+#data-table th,
+#data-table td {
+    padding: 8px;
+    border: 1px solid #eee;
+    text-align: left
+}
+
+#data-table thead th {
+    background: #fff4ea
+}
+
+.actions-bottom {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px
+}
+
+#download-csv {
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    cursor: pointer
+}
+
+#download-csv[disabled] {
+    opacity: .5;
+    cursor: not-allowed
+}
+
+/* small screens */
+@media(max-width:800px) {
+    .container {
+        flex-direction: column
+    }
+
+    .sidebar {
+        width: 100%
+    }
+}
