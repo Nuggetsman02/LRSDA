@@ -10,7 +10,7 @@ class LRSConnectionCheck
 {
     private Client $client;
 
-    //constructeur qui initialise le client HTTP avec les paramètres de configuration
+    //constructeur qui initialise le client GuzzleHTTP avec les paramètres de configuration
     public function __construct()
     {
         $conf = Configuration::getInstance();
@@ -20,14 +20,14 @@ class LRSConnectionCheck
             'base_uri' => $xapi['uri'] . '/', //s'assure qu'il y a un slash à la fin
             'headers'  => [
                 'X-Experience-API-Version' => '1.0.1',
-                'Auth'                    => $xapi['auth_key'],
+                'Authorization'            => $xapi['auth_key'],
                 'Content-Type'             => 'application/json',
             ],
             'http_errors' => true,
         ]);
     }
 
-    // fait un requete simple pour tester la connexion au LRS
+    // requete simple pour tester la connexion au LRS
     public function pingLRS(): bool
     {
         try {
@@ -37,6 +37,7 @@ class LRSConnectionCheck
 
             return $response->getStatusCode() === 200;
         } catch (GuzzleException $e) {
+            echo "Erreur Guzzle : " . $e->getMessage();
             return false;
         }
     }
