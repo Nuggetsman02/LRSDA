@@ -1,6 +1,6 @@
 <?php
 
-namespace LRSDA\Client\Models;
+namespace LRSDA\Server\Models;
 
 /**
  * Représente un statement xAPI (version simplifiée)

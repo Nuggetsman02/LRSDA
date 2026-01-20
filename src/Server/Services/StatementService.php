@@ -1,10 +1,10 @@
 <?php
 
-namespace LRSDA\Client\Services;
+namespace LRSDA\Server\Services;
 
 use GuzzleHttp\Client;
 use LRSDA\Server\LRSConnector\Configuration;
-use LRSDA\Client\Models\Statement;
+use LRSDA\Server\Models\Statement;
 
 /**
  * Accès aux statements xAPI depuis le LRS
