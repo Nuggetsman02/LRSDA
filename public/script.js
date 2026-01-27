@@ -36,7 +36,7 @@
         });
 
         // add some fake rows (visual only)
-        for (let r = 1; r <= 8; r++) {
+        for (let r = 1; r <= 5; r++) {
             const tr = document.createElement('tr');
             const idxTd = document.createElement('td');
             idxTd.textContent = r;

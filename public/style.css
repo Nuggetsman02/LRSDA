@@ -109,7 +109,7 @@ body {
 #data-table th,
 #data-table td {
     padding: 8px;
-    border: 1px solid #eee;
+    border: 1px solid #000000;
     text-align: left
 }
 

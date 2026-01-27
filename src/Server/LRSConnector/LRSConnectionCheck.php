@@ -34,7 +34,8 @@ class LRSConnectionCheck
             $response = $this->client->request('GET', 'statements', [
                 'query' => ['limit' => 1]
             ]);
-
+            $body = $response->getBody()->getContents();
+            echo htmlspecialchars($body);
             return $response->getStatusCode() === 200;
         } catch (GuzzleException $e) {
             echo "Erreur Guzzle : " . $e->getMessage();

@@ -44,8 +44,8 @@ class StatementService
         foreach ($data['statements'] ?? [] as $raw) {
             $statements[] = new Statement(
                 $raw['id'],
-                $raw['actor']['name'] ?? '',
-                $raw['actor']['mbox'] ?? '',
+                // $raw['actor']['name'] ?? '',
+                // $raw['actor']['mbox'] ?? '',
                 $raw['verb']['id'] ?? '',
                 $raw['object']['id'] ?? ''
             );

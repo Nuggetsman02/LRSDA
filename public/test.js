@@ -7,7 +7,7 @@
 // });
 $(function () {
 const payload = {
-    filters : ["user1", "actionA"],
+    filters : ["actor1", "verbA"],
 };
 $.get("/test", payload).then(function (data) {
 
@@ -17,7 +17,7 @@ $.get("/test", payload).then(function (data) {
         let tbody = $("<tbody></tbody>");
 
         // En-têtes
-        let headers = ["User", "Action", "Object", "Score", "Timestamp"];
+        let headers = ["Actor", "Verb", "Object", "Score", "Timestamp"];
         let headRow = $("<tr></tr>");
 
         $.each(headers, function (_, h) {
@@ -30,8 +30,8 @@ $.get("/test", payload).then(function (data) {
         $.each(data, function (_, value) {
             var row = $("<tr></tr>");
 
-            row.append($("<td></td>").text(value.user));
-            row.append($("<td></td>").text(value.action));
+            row.append($("<td></td>").text(value.actor));
+            row.append($("<td></td>").text(value.verb));
             row.append($("<td></td>").text(value.object));
             row.append($("<td></td>").text(value.score));
             row.append($("<td></td>").text(value.timestamp));

@@ -1,23 +1,23 @@
 {
     "a": {
-        "user": "u123456",
-        "action": "eating",
+        "actor": "u123456",
+        "verb": "eating",
         "object": "message",
         "score": 10,
         "timestamp": "2024-06-15T10:30:00"
     },
     "b": {
-        "user": "u789012",
-        "action": "reading",
+        "actor": "u789012",
+        "verb": "reading",
         "object": "article",
         "score": 8,
         "timestamp": "2024-06-15T11:00:00"
     },
     "c": {
-        "user": "u345678",
-        "action": "writing",
+        "actor": "u345678",
+        "verb": "writing",
         "object": "comment",
-        "score": 9,
+        "score": 3,
         "timestamp": "2024-06-15T11:30:00"
     }
 }
