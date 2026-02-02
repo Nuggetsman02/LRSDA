@@ -32,10 +32,12 @@ class LRSConnectionCheck
     {
         try {
             $response = $this->client->request('GET', 'statements', [
-                'query' => ['limit' => 1]
+                'query' => ['since' => '2025-01-01T00:00:00Z',
+                            'limit' => 1]
             ]);
+            
             $body = $response->getBody()->getContents();
-            echo htmlspecialchars($body);
+            echo "<script>console.log(" . json_encode($body) . ");</script>";
             return $response->getStatusCode() === 200;
         } catch (GuzzleException $e) {
             echo "Erreur Guzzle : " . $e->getMessage();

@@ -38,6 +38,15 @@ body {
     cursor: pointer
 }
 
+.history-btn {
+    background: #fff;
+    color: var(--orange);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer
+}
+
 .container {
     display: flex;
     gap: 16px;
