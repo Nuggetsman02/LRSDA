@@ -2,29 +2,41 @@
 
 namespace LRSDA\Server\Models;
 
+use DateTime;
+
 /**
- * Représente un statement xAPI (version simplifiée)
+ * Représente un Statement xAPI (version simplifiée)
  */
+
 class Statement
 {
     private string $id;
-    // private string $actorName;
-    // private string $actorMbox;
-    private string $verbId;
-    private string $objectId;
+    private StatementActor $actor;
+    private StatementVerb $verb;
+    private DateTime $timestamp;
+    private StatementObject $object;
+    private DateTime $stored;
+    private StatementAuthority $authority;
+    private string $version;
 
     public function __construct(
         string $id,
-        // string $actorName,
-        // string $actorMbox,
-        string $verbId,
-        string $objectId
+        StatementActor $actor,
+        StatementVerb $verb,
+        DateTime $timestamp,
+        StatementObject $object,
+        DateTime $stored,
+        StatementAuthority $authority,
+        string $version
     ) {
         $this->id = $id;
-        // $this->actorName = $actorName;
-        // $this->actorMbox = $actorMbox;
-        $this->verbId = $verbId;
-        $this->objectId = $objectId;
+        $this->actor = $actor;
+        $this->verb = $verb;
+        $this->timestamp = $timestamp;
+        $this->object = $object;
+        $this->stored = $stored;
+        $this->authority = $authority;
+        $this->version = $version;
     }
 
     // --------
@@ -36,23 +48,79 @@ class Statement
         return $this->id;
     }
 
-    // public function getActorName(): string
-    // {
-    //     return $this->actorName;
-    // }
-
-    // public function getActorMbox(): string
-    // {
-    //     return $this->actorMbox;
-    // }
-
-    public function getVerbId(): string
+    public function setId(string $id): void
     {
-        return $this->verbId;
+        $this->id = $id;
     }
 
-    public function getObjectId(): string
+    public function getActor(): StatementActor
     {
-        return $this->objectId;
+        return $this->actor;
+    }
+
+    public function setActor(StatementActor $actor): void
+    {
+        $this->actor = $actor;
+    }
+
+
+    public function getVerb(): StatementVerb
+    {
+        return $this->verb;
+    }
+
+    public function setVerb(StatementVerb $verb): void
+    {
+        $this->verb = $verb;
+    }
+
+    public function getTimestamp(): DateTime
+    {
+        return $this->timestamp;
+    }
+
+    public function setTimestamp(DateTime $timestamp): void
+    {
+        $this->timestamp = $timestamp;
+    }
+
+    public function getObject(): StatementObject
+    {
+        return $this->object;
+    }
+
+    public function setObject(StatementObject $object): void
+    {
+        $this->object = $object;
+    }
+
+    public function getStored(): DateTime
+    {
+        return $this->stored;
+    }
+
+    public function setStored(DateTime $stored): void
+    {
+        $this->stored = $stored;
+    }
+
+    public function getAuthority(): StatementAuthority
+    {
+        return $this->authority;
+    }
+
+    public function setAuthority(StatementAuthority $authority): void
+    {
+        $this->authority = $authority;
+    }
+
+    public function getVersion(): string
+    {
+        return $this->version;
+    }
+
+    public function setVersion(string $version): void
+    {
+        $this->version = $version;
     }
 }
