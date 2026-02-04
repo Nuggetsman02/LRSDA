@@ -4,12 +4,14 @@ namespace LRSDA\Server\Services;
 
 use GuzzleHttp\Client;
 use LRSDA\Server\LRSConnector\Configuration;
-use LRSDA\Server\Models\Statement;
-use LRSDA\Server\Models\StatementAccount;
-use LRSDA\Server\Models\StatementActor;
-use LRSDA\Server\Models\StatementVerb;
-use LRSDA\Server\Models\StatementObject;
-use LRSDA\Server\Models\StatementAuthority;
+use LRSDA\Server\Models\{
+    Statement,
+    StatementAccount,
+    StatementActor,
+    StatementVerb,
+    StatementObject,
+    StatementAuthority
+};
 
 /**
  * Accès aux statements xAPI depuis le LRS
@@ -63,14 +65,14 @@ class StatementService
 
             $verb = new StatementVerb(
                 $raw['verb']['id'] ?? '',
-                (string)$displayText      
+                (string)$displayText
             );
 
             $object = new StatementObject(
                 $raw['object']['objectType'] ?? '',
                 $raw['object']['id'] ?? '',
                 $raw['object']['definition']['type'] ?? ''
-                );
+            );
 
             $authorityAccountRaw = $raw['authority']['account'] ?? [];
             $authorityAccount = new StatementAccount(
