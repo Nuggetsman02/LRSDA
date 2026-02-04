@@ -23,25 +23,22 @@
     <main class="container">
         <aside class="sidebar">
             <div class="date-filter">
-                <h3>Filtre par date</h3>
+                <h3>Filtres</h3>
                 <label for="start-date">Du :</label>
-                <input type="date" id="start-date" value="2000-01-01">
+                <input type="date" id="start-date" value="2021-01-01">
                 <label for="end-date">Au :</label>
                 <input type="date" id="end-date">
             </div>
 
             <div class="generic-filters">
-                <h3>Filtres</h3>
                 <div class="filter-actions">
                     <button id="select-all">Sélectionner tous les filtres</button>
                     <button id="deselect-all">Désélectionner tous les filtres</button>
                 </div>
                 <ul id="filter-list">
-                    <!-- <li><label><input type="checkbox" class="filter-checkbox" data-column="Utilisateur"> Utilisateur</label></li> -->
                     <li><label><input type="checkbox" class="filter-checkbox" data-column="Action"> Action</label></li>
                     <li><label><input type="checkbox" class="filter-checkbox" data-column="Objet"> Objet</label></li>
                     <li><label><input type="checkbox" class="filter-checkbox" data-column="Score"> Score</label></li>
-                    <li><label><input type="checkbox" class="filter-checkbox" data-column="Durée"> Durée</label></li>
                 </ul>
             </div>
         </aside>
@@ -62,11 +59,13 @@
             <div class="actions-bottom">
                 <button id="download-csv" disabled>Télécharger .csv</button>
             </div>
-            <button><a href="test.html">Test route</a></button>
+            <div class="actions-bottom">
+                <button id="test-btn"><a href="test.html">Test route</a></button>
+            </div>
         </section>
     </main>
 
-    <script src="../script.js"></script>
+    <script src="../scripts/home_script.js"></script>
 </body>
 
 </html>
