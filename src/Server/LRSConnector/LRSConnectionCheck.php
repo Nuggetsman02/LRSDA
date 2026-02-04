@@ -10,7 +10,6 @@ class LRSConnectionCheck
 {
     private Client $client;
 
-    //constructeur qui initialise le client GuzzleHTTP avec les paramètres de configuration
     public function __construct()
     {
         $conf = Configuration::getInstance();
@@ -32,10 +31,9 @@ class LRSConnectionCheck
     {
         try {
             $response = $this->client->request('GET', 'statements', [
-                'query' => ['since' => '2025-01-01T00:00:00Z',
-                            'limit' => 1]
+                'query' => ['limit' => 1]
             ]);
-            
+
             $body = $response->getBody()->getContents();
             echo "<script>console.log(" . json_encode($body) . ");</script>";
             return $response->getStatusCode() === 200;
