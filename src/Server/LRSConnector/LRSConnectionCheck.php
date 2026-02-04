@@ -10,20 +10,22 @@ class LRSConnectionCheck
 {
     private Client $client;
 
-    public function __construct()
+    public function __construct(Client $client)
     {
-        $conf = Configuration::getInstance();
-        $xapi = $conf->xapi();
+        // $conf = Configuration::getInstance();
+        // $xapi = $conf->xapi();
 
-        $this->client = new Client([
-            'base_uri' => $xapi['uri'] . '/', //s'assure qu'il y a un slash à la fin
-            'headers'  => [
-                'X-Experience-API-Version' => '1.0.1',
-                'Authorization'            => $xapi['auth_key'],
-                'Content-Type'             => 'application/json',
-            ],
-            'http_errors' => true,
-        ]);
+        // $this->client = new Client([
+        //     'base_uri' => $xapi['uri'] . '/', //s'assure qu'il y a un slash à la fin
+        //     'headers'  => [
+        //         'X-Experience-API-Version' => '1.0.1',
+        //         'Authorization'            => $xapi['auth_key'],
+        //         'Content-Type'             => 'application/json',
+        //     ],
+        //     'http_errors' => true,
+        // ]);
+
+        $this->client = $client;
     }
 
     // requete simple pour tester la connexion au LRS

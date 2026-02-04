@@ -3,3 +3,4 @@ logs/*
 composer.lock
 vendor/
 config.json
+statement.json

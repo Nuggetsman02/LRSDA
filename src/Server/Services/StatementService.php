@@ -3,7 +3,6 @@
 namespace LRSDA\Server\Services;
 
 use GuzzleHttp\Client;
-use LRSDA\Server\LRSConnector\Configuration;
 use LRSDA\Server\Models\{
     Statement,
     StatementAccount,
@@ -21,18 +20,20 @@ class StatementService
 {
     private Client $client;
 
-    public function __construct()
+    public function __construct(Client $client)
     {
-        $xapi = Configuration::getInstance()->xapi();
+        // $xapi = Configuration::getInstance()->xapi();
 
-        $this->client = new Client([
-            'base_uri' => $xapi['uri'] . '/', //s'assure qu'il y a un slash à la fin
-            'headers'  => [
-                'X-Experience-API-Version' => '1.0.1',
-                'Authorization'            => $xapi['auth_key'],
-                'Content-Type'             => 'application/json',
-            ],
-        ]);
+        // $this->client = new Client([
+        //     'base_uri' => $xapi['uri'] . '/', //s'assure qu'il y a un slash à la fin
+        //     'headers'  => [
+        //         'X-Experience-API-Version' => '1.0.1',
+        //         'Authorization'            => $xapi['auth_key'],
+        //         'Content-Type'             => 'application/json',
+        //     ],
+        // ]);
+
+        $this->client = $client;
     }
 
     /**
