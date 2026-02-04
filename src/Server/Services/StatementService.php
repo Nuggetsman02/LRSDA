@@ -5,6 +5,11 @@ namespace LRSDA\Server\Services;
 use GuzzleHttp\Client;
 use LRSDA\Server\LRSConnector\Configuration;
 use LRSDA\Server\Models\Statement;
+use LRSDA\Server\Models\StatementAccount;
+use LRSDA\Server\Models\StatementActor;
+use LRSDA\Server\Models\StatementVerb;
+use LRSDA\Server\Models\StatementObject;
+use LRSDA\Server\Models\StatementAuthority;
 
 /**
  * Accès aux statements xAPI depuis le LRS
@@ -38,16 +43,56 @@ class StatementService
         ]);
 
         $data = json_decode($response->getBody()->getContents(), true);
-
         $statements = [];
 
         foreach ($data['statements'] ?? [] as $raw) {
-            $statements[] = new Statement(
-                $raw['id'],
-                // $raw['actor']['name'] ?? '',
-                // $raw['actor']['mbox'] ?? '',
+
+            $ActorAccountRaw = $raw['actor']['account'] ?? [];
+            $ActorAccount = new StatementAccount(
+                $ActorAccountRaw['name'] ?? '',
+                $ActorAccountRaw['homePage'] ?? ''
+            );
+
+            $actor = new StatementActor(
+                $raw['actor']['objectType'] ?? 'Agent',
+                $ActorAccount
+            );
+
+            $displayMap = $raw['verb']['display'] ?? [];
+            $displayText = $displayMap['fr-FR'] ?? current($displayMap) ?? 'unknown';
+
+            $verb = new StatementVerb(
                 $raw['verb']['id'] ?? '',
-                $raw['object']['id'] ?? ''
+                (string)$displayText      
+            );
+
+            $object = new StatementObject(
+                $raw['object']['objectType'] ?? '',
+                $raw['object']['id'] ?? '',
+                $raw['object']['definition']['type'] ?? ''
+                );
+
+            $authorityAccountRaw = $raw['authority']['account'] ?? [];
+            $authorityAccount = new StatementAccount(
+                $authorityAccountRaw['name'] ?? '',
+                $authorityAccountRaw['homePage'] ?? '',
+            );
+
+            $authority = new StatementAuthority(
+                $raw['authority']['objectType'] ?? 'Agent',
+                $raw['authority']['name'] ?? '',
+                $authorityAccount
+            );
+
+            $statements[] = new Statement(
+                $raw['id'] ?? '',
+                $actor,
+                $verb,
+                new \DateTime($raw['timestamp'] ?? 'now'),
+                $object,
+                new \DateTime($raw['stored'] ?? 'now'),
+                $authority,
+                $raw['version'] ?? 'unknown'
             );
         }
 
