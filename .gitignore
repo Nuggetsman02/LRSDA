@@ -4,3 +4,4 @@ composer.lock
 vendor/
 config.json
 data/*
+src/data/*
