@@ -22,17 +22,6 @@ class StatementService
 
     public function __construct(Client $client)
     {
-        // $xapi = Configuration::getInstance()->xapi();
-
-        // $this->client = new Client([
-        //     'base_uri' => $xapi['uri'] . '/', //s'assure qu'il y a un slash à la fin
-        //     'headers'  => [
-        //         'X-Experience-API-Version' => '1.0.1',
-        //         'Authorization'            => $xapi['auth_key'],
-        //         'Content-Type'             => 'application/json',
-        //     ],
-        // ]);
-
         $this->client = $client;
     }
 

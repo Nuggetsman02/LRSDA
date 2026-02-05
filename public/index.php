@@ -2,12 +2,12 @@
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use LRSDA\Server\LRSConnector\LRSConnectionCheck;
+use LRSDA\Server\LRSConnector\Configuration;
+use LRSDA\Server\Services\StatementService;
 use Slim\Factory\AppFactory;
 use DI\ContainerBuilder;
 use GuzzleHttp\Client;
-use LRSDA\Server\Services\StatementService;
-use LRSDA\Server\LRSConnector\Configuration;
-use LRSDA\Server\LRSConnector\LRSConnectionCheck;
 
 require(__DIR__ . '/../_config/config.php');
 require(__DIR__ . '/../vendor/autoload.php');
@@ -34,7 +34,6 @@ $containerBuilder->addDefinitions([
         return new StatementService($c->get(Client::class));
     },
 
-    // Le Checker utilise aussi le même client
     LRSConnectionCheck::class => function ($c) {
         return new LRSConnectionCheck($c->get(Client::class));
     }
@@ -57,6 +56,26 @@ $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 // echo "Pinging LRS... ";
 // echo $lrsChecker->pingLRS() ? 'LRS is reachable.' : 'Failed to reach LRS.';
 // die();
+
+// $Statements = $container->get(StatementService::class)->getStatements(['limit' => 5]);
+// $csvStatments = $container->get(StatementService::class)->exportStatementsToCsv($Statements);
+
+// $fileName = 'test_lrs_export.csv';
+
+// 1. Nettoyer le tampon de sortie pour éviter des caractères parasites
+// if (ob_get_level()) ob_end_clean();
+
+// 2. En-têtes HTTP pour forcer le téléchargement par le navigateur
+// header('Content-Type: text/csv; charset=utf-8');
+// header('Content-Disposition: attachment; filename="' . $fileName . '"');
+// header('Pragma: no-cache');
+// header('Expires: 0');
+
+// 3. Envoyer le contenu directement au navigateur
+// echo $csvStatments;
+
+// 4. Arrêter le script pour ne pas envoyer de HTML supplémentaire
+// exit;
 
 // Route par défaut : redirection vers la page d'accueil
 $app->get('/', function (Request $request, Response $response) {

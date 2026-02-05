@@ -4,7 +4,6 @@ namespace LRSDA\Server\LRSConnector;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use LRSDA\Server\LRSConnector\Configuration;
 
 class LRSConnectionCheck
 {
@@ -12,19 +11,6 @@ class LRSConnectionCheck
 
     public function __construct(Client $client)
     {
-        // $conf = Configuration::getInstance();
-        // $xapi = $conf->xapi();
-
-        // $this->client = new Client([
-        //     'base_uri' => $xapi['uri'] . '/', //s'assure qu'il y a un slash à la fin
-        //     'headers'  => [
-        //         'X-Experience-API-Version' => '1.0.1',
-        //         'Authorization'            => $xapi['auth_key'],
-        //         'Content-Type'             => 'application/json',
-        //     ],
-        //     'http_errors' => true,
-        // ]);
-
         $this->client = $client;
     }
 
@@ -33,7 +19,7 @@ class LRSConnectionCheck
     {
         try {
             $response = $this->client->request('GET', 'statements', [
-                'query' => ['limit' => 1]
+                'query' => ['limit' => 10]
             ]);
 
             $body = $response->getBody()->getContents();
