@@ -12,47 +12,49 @@
     const todayISO = new Date().toISOString().slice(0, 10);
     endDate.value = todayISO;
 
-    // --- FONCTIONS DE MISE À JOUR ---
+    // --- LOGIQUE DE RÉCUPÉRATION ---
 
     function getSelectedValues() {
-        // Récupère tous les items cochés dans tous les dropdowns
         return Array.from(document.querySelectorAll('.item.checked .item-text'))
-            .map(span => span.textContent);
+                    .map(span => span.textContent);
     }
 
-    function updateDownloadState() {
-        const selected = getSelectedValues();
-        downloadBtn.disabled = selected.length === 0;
-    }
+    // --- INTERFACE : TABLEAU FACTICE ---
 
     function renderTable() {
         headerRow.innerHTML = '';
         body.innerHTML = '';
 
         const selectedItems = getSelectedValues();
-        if (selectedItems.length === 0) return;
-
-        // Header
+        
+        // Colonne d'index toujours présente
         const indexTh = document.createElement('th');
         indexTh.textContent = '#';
         headerRow.appendChild(indexTh);
 
+        if (selectedItems.length === 0) {
+            // État vide mais visible
+            const emptyTh = document.createElement('th');
+            emptyTh.textContent = "Aperçu des données (sélectionnez des filtres)";
+            headerRow.appendChild(emptyTh);
+
+            return;
+        }
+
+        // Colonnes dynamiques
         selectedItems.forEach(text => {
             const th = document.createElement('th');
             th.textContent = text;
             headerRow.appendChild(th);
         });
 
-        // Simulation de données (Traces LRS)
+        // Remplissage factice
         for (let r = 1; r <= 5; r++) {
             const tr = document.createElement('tr');
-            const idxTd = document.createElement('td');
-            idxTd.textContent = r;
-            tr.appendChild(idxTd);
-
+            tr.innerHTML = `<td>${r}</td>`;
             selectedItems.forEach(text => {
                 const td = document.createElement('td');
-                td.textContent = `${text}`;
+                td.textContent = `${text} ${r}`;
                 tr.appendChild(td);
             });
             body.appendChild(tr);
@@ -65,81 +67,83 @@
         const selectBtn = container.querySelector(".select-btn");
         const items = container.querySelectorAll(".item");
         const btnText = container.querySelector(".btn-text");
-        const defaultText = btnText.innerText;
 
         selectBtn.addEventListener("click", (e) => {
-            e.stopPropagation(); // Empêche la fermeture immédiate via window.click
+            e.stopPropagation();
             selectBtn.classList.toggle("open");
         });
 
         items.forEach(item => {
-            item.addEventListener("click", () => {
+            item.addEventListener("click", (e) => {
+                e.stopPropagation(); // Empêche la fermeture du menu
                 item.classList.toggle("checked");
 
-                let checkedCount = container.querySelectorAll(".checked").length;
+                const checkedCount = container.querySelectorAll(".checked").length;
+                const defaultText = btnText.getAttribute("data-default");
+                
                 btnText.innerText = checkedCount > 0 ? `${checkedCount} Sélectionné(s)` : defaultText;
 
-                // Liaison avec le tableau et le bouton
                 renderTable();
-                updateDownloadState();
+                downloadBtn.disabled = getSelectedValues().length === 0;
             });
         });
     });
 
-    // --- BOUTONS D'ACTIONS GLOBALES ---
+    // --- ACTIONS GLOBALES ---
 
     selectAllBtn.addEventListener('click', () => {
         document.querySelectorAll('.item').forEach(i => i.classList.add('checked'));
-        // Mise à jour des labels de texte pour chaque dropdown
         dropdowns.forEach(container => {
             const count = container.querySelectorAll(".checked").length;
             const label = container.querySelector(".btn-text");
-            if (count > 0) label.innerText = `${count} Sélectionné(s)`;
+            label.innerText = `${count} Sélectionné(s)`;
         });
         renderTable();
-        updateDownloadState();
+        downloadBtn.disabled = false;
     });
 
     deselectAllBtn.addEventListener('click', () => {
-        // 1. Décoche tous les items
         document.querySelectorAll('.item').forEach(i => i.classList.remove('checked'));
-
-        // 2. Réinitialise les textes en utilisant l'attribut data-default
         dropdowns.forEach(container => {
             const btnText = container.querySelector(".btn-text");
             btnText.innerText = btnText.getAttribute("data-default");
         });
-
-        // 3. Rafraîchir l'interface
         renderTable();
-        updateDownloadState();
+        downloadBtn.disabled = true;
     });
 
-    // --- EXPORT CSV ---
+    // --- EXPORT VERS BACK-END (PHP/SLIM) ---
 
     downloadBtn.addEventListener('click', () => {
-        const selectedItems = getSelectedValues();
-        const header = ['#', ...selectedItems];
-        const rows = [];
-        for (let r = 1; r <= 8; r++) {
-            const row = [r, ...selectedItems.map(c => `${c} data_${r}`)];
-            rows.push(row);
-        }
-        const csv = [header.join(','), ...rows.map(r => r.join(','))].join('\n');
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `LRS_Export_${new Date().getTime()}.csv`;
-        a.click();
+        // Construction de l'objet de filtres
+        const payload = {
+            start_date: startDate.value,
+            end_date: endDate.value,
+            verbs: Array.from(document.querySelectorAll('.container-dropdown:first-of-type .item.checked .item-text')).map(s => s.textContent),
+            objects: Array.from(document.querySelectorAll('.container-dropdown:last-of-type .item.checked .item-text')).map(s => s.textContent)
+        };
+
+        // Envoi via formulaire invisible pour gérer le téléchargement natif
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/export/csv'; // Route Slim à définir
+
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'filters';
+        input.value = JSON.stringify(payload);
+
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
     });
 
-    // Fermeture des menus au clic extérieur
+    // Fermeture automatique au clic extérieur
     window.addEventListener("click", () => {
         dropdowns.forEach(c => c.querySelector(".select-btn").classList.remove("open"));
     });
 
-    // Initialisation
+    // Init
     renderTable();
-    updateDownloadState();
 })();

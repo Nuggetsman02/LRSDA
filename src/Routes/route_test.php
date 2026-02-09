@@ -6,7 +6,7 @@ use Slim\App;
 
 return function (App $app) {
     $app->get('/test', function (Request $request, Response $response) {
-        $jsonFile = file_get_contents(__DIR__ . '/../data/statement.json');
+        $jsonFile = file_get_contents(__DIR__ . '/../data/statements.json');
         // recover query parameters
         // $queryParams = $request->getQueryParams();
         // error_log(print_r($queryParams, true));
