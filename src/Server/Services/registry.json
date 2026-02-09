@@ -1,0 +1,385 @@
+{
+    "version": "1.0.0",
+    "activities": [
+        {
+            "name": "ULLAMobileApp",
+            "description": "Un objet dédié aux interactions avec l'app mobile ULLA",
+            "type": "http://smart.uliege.be/ulla/mobileapp",
+            "ifi_root": "http://smart.uliege.be/ulla/mobileapp",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/mobileapp/content",
+                "content": {}
+            }
+        },
+        {
+            "name": "ULLAMobileAppFeed",
+            "description": "Un objet dédié aux interactions avec le feed de l'app mobile ULLA",
+            "type": "http://smart.uliege.be/ulla/mobileapp/feed/1.0",
+            "ifi_root": "http://smart.uliege.be/ulla/mobileapp/feed/1.0",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/mobileapp/feed/1.0",
+                "content": {}
+            }
+        },
+        {
+            "name": "Moods",
+            "description": "Un objet dédié aux émotions",
+            "type": "http://smart.uliege.be/ulla/moods",
+            "ifi_root": "http://smart.uliege.be/ulla/moods",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/moods",
+                "content": {
+                    "mood_id": "the mood ID (from activity profile's list",
+                    "intensity": "an int [0 < x <=100]"
+                }
+            }
+        },
+        {
+            "name": "GenericObject",
+            "description": "Un objet générique sans résultat. Normalement on ne devrait jamais avoir à gérer ce genre d'objet.",
+            "type": "http://smart.uliege.be/ulla/undefined",
+            "ifi_root": "http://smart.uliege.be/ulla/undefined",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/undefined/content",
+                "content": {}
+            }
+        },
+        {
+            "name": "GenericObjectWithResult",
+            "description": "Un objet générique AVEC résultat. Normalement on ne devrait jamais avoir à gérer ce genre d'objet.",
+            "type": "http://smart.uliege.be/ulla/undefined-with-result",
+            "ifi_root": "http://smart.uliege.be/ulla/undefined-with-result",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/undefined-with-result/content",
+                "content": {}
+            },
+            "result": {
+                "extension": {
+                    "id": "http://smart.uliege.be/ulla/undefined-with-result/result/content",
+                    "content": {}
+                }
+            }
+        },
+        {
+            "name": "Assessment",
+            "description": "Un test, QCM ou QROL",
+            "type": "http://adlnet.gov/expapi/activities/assessment",
+            "ifi_root": "http://smart.uliege.be/ulla/assessment",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/assessment/info",
+                "content": {
+                    "questions": "int [number of questions in test]",
+                    "tariff_type": "string [tariff name for QCM tests]",
+                    "severity": 20,
+                    "answers": [
+                        1,
+                        2,
+                        3,
+                        4
+                    ],
+                    "weights": [
+                        1,
+                        1,
+                        1,
+                        2,
+                        1
+                    ]
+                }
+            },
+            "result": {
+                "extension": {
+                    "id": "http://smart.uliege.be/ulla/assessment/result/info",
+                    "content": {
+                        "position": "int [student ranking in tests results]",
+                        "questions": "int [number of questions in test]",
+                        "answers": [
+                            false,
+                            true,
+                            false,
+                            true
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "AssessmentPart",
+            "description": "Une partie de test QCM.",
+            "type": "http://smart.uliege.be/ulla/assessment-part",
+            "ifi_root": "http://smart.uliege.be/ulla/assessment/[root_id]/part",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/assessment/part/info",
+                "content": {
+                    "questions": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ],
+                    "answers": [
+                        4,
+                        3,
+                        2,
+                        1,
+                        2
+                    ]
+                }
+            },
+            "result": {
+                "extension": {
+                    "id": "http://smart.uliege.be/ulla/assessment/part/result/info",
+                    "content": {
+                        "position": "int [student ranking for this part of the test]",
+                        "questions": [
+                            1,
+                            2,
+                            3
+                        ],
+                        "answers": [
+                            false,
+                            true,
+                            false
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "OpenAnswerQuestion",
+            "description": "Une question à réponse ouverte longue",
+            "type": "http://smart.uliege.be/ulla/assessment/open-answer-question",
+            "ifi_root": "http://smart.uliege.be/ulla/assessment/[root_id]/question",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/assessment/open-answer-question/info",
+                "content": {
+                    "weight": {
+                        "points": "int number of points in total points",
+                        "percent": "float percentage of total points"
+                    }
+                }
+            },
+            "result": {
+                "extension": {
+                    "id": "http://smart.uliege.be/ulla/assessment/open-answer-question/result/info",
+                    "content": {
+                        "position": "int [student ranking in tests results]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "OpenAnswerQuestionCriteria",
+            "description": "Un critère associé à une question à réponse ouverte longue",
+            "type": "http://smart.uliege.be/ulla/assessment/open-answer-question-criteria",
+            "ifi_root": "http://smart.uliege.be/ulla/assessment/[root_id]/question/[item_id]/criteria/",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/assessment/open-answer-question-criteria/info",
+                "content": {
+                    "weight": {
+                        "points": "int number of points in total points",
+                        "percent": "float percentage of total points"
+                    },
+                    "indicators": [
+                        {
+                            "title": "string [indicator title]",
+                            "description": "string [indicator description]",
+                            "value": "int [indicator value in points over 100]"
+                        }
+                    ]
+                }
+            },
+            "result": {
+                "extension": {
+                    "id": "http://smart.uliege.be/ulla/assessment/open-answer-question-criteria/result/info",
+                    "content": {
+                        "indicator": "int [selected indicator]",
+                        "position": "int [student ranking in tests results]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "Survey",
+            "description": "Une enquête à caractère pédagogique orientée LA",
+            "type": "http://id.tincanapi.com/activitytype/survey",
+            "ifi_root": "http://smart.uliege.be/ulla/survey",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/survey",
+                "content": {
+                    "blocks": "text blocks coming from editorjs",
+                    "version": "editorjs text-blocks version, should be 2.8.1"
+                }
+            }
+        },
+        {
+            "name": "SurveyQuestion",
+            "description": "Une question associée à une enquête à caractère pédagogique orientée LA",
+            "type": "http://activitystrea.ms/schema/1.0/question",
+            "ifi_root": "http://smart.uliege.be/ulla/survey/[root_id]/question",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/survey/question/info",
+                "content": {
+                    "type": "likert ",
+                    "name": "string [the name of the question]",
+                    "description": "string [question descption]",
+                    "scale": [
+                        {
+                            "value": "int [value associated with this answer]",
+                            "name": "string [the name of this propositon]"
+                        }
+                    ]
+                }
+            },
+            "result": {
+                "extension": {
+                    "id": "http://smart.uliege.be/ulla/survey/question/result/info",
+                    "content": {}
+                }
+            }
+        },
+        {
+            "name": "Feedback",
+            "description": "Un Feedback SMART",
+            "type": "http://smart.uliege.be/ulla/feedback",
+            "ifi_root": "http://smart.uliege.be/ulla/feedback",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/feedback/info",
+                "content": {}
+            },
+            "result": {
+                "extension": {
+                    "id": "http://smart.uliege.be/ulla/feedback/result/info",
+                    "content": {}
+                }
+            }
+        },
+        {
+            "name": "FeedbackPart",
+            "description": "Un Feedback SMART pour une partie de test",
+            "type": "http://smart.uliege.be/ulla/feedback/part",
+            "ifi_root": "http://smart.uliege.be/ulla/feedback/[root_id]/part",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/feedback/part/info",
+                "content": {}
+            },
+            "result": {
+                "extension": {
+                    "id": "http://smart.uliege.be/ulla/feedback/part/result/info",
+                    "content": {}
+                }
+            }
+        },
+        {
+            "name": "FeedbackMessage",
+            "description": "Un message associé à Feedback SMART",
+            "type": "http://smart.uliege.be/ulla/feedback/message",
+            "ifi_root": "http://smart.uliege.be/ulla/feedback/[root_id]/messsage",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/feedback/message/info",
+                "content": {}
+            }
+        },
+        {
+            "name": "Message",
+            "description": "Un message à destination des étudiants",
+            "type": "http://smart.uliege.be/ulla/message",
+            "ifi_root": "http://smart.uliege.be/ulla/message",
+            "extension": {
+                "id": "http://smart.uliege.be/ulla/message/info",
+                "content": {}
+            }
+        }
+    ],
+    "verbs": [
+        {
+            "name": "completed",
+            "id": "http://activitystrea.ms/schema/1.0/complete",
+            "display": {
+                "fr-FR": "a terminé"
+            },
+            "description": "l'acteur a terminé l'objet (Test,Survey) associé. Eventuellement un élément 'Result' est associé au statement "
+        },
+        {
+            "name": "received",
+            "id": "http://activitystrea.ms/schema/1.0/receive",
+            "display": {
+                "fr-FR": "a reçu"
+            },
+            "description": "l'acteur a reçu un élément (Survey, Feeback, Message, ...) associé."
+        },
+        {
+            "name": "accessed",
+            "id": "http://activitystrea.ms/schema/1.0/access",
+            "display": {
+                "fr-FR": "a accedé"
+            },
+            "description": "l'Acteur a accédé à un l'élément associé (un Resultat, un Feedback, un Survey), il l'a 'visualisé' et n'a pe rien fait d'autre"
+        },
+        {
+            "name": "acknowledge",
+            "id": "http://activitystrea.ms/schema/1.0/acknowledge",
+            "display": {
+                "fr-FR": "a pris connaissance"
+            },
+            "description": "L'acteur s'est vu présenté l'objet associé."
+        },
+        {
+            "name": "answered",
+            "id": "http://adlnet.gov/expapi/verbs/answered",
+            "display": {
+                "fr-FR": "a répondu"
+            },
+            "description": "L'acteur à répondu à la question référencée par l'object associé. Le statement devra donc contenir un élément 'Result'."
+        },
+        {
+            "name": "enrolled",
+            "id": "http://www.uliege.be/smart/xAPITerms/verbs/enrolled",
+            "display": {
+                "fr-FR": "est inscrit"
+            },
+            "description": "L'utilisateur a accepté les condition d'utilisation du service."
+        },
+        {
+            "name": "login",
+            "id": "http://www.uliege.be/smart/xAPITerms/verbs/loggedin",
+            "display": {
+                "fr-FR": "est connecté"
+            },
+            "description": "L'utilisateur s'est connecté à l'application"
+        },
+        {
+            "name": "logout",
+            "id": "http://www.uliege.be/smart/xAPITerms/verbs/loggedout",
+            "display": {
+                "fr-FR": "est déconnecté"
+            },
+            "description": "L'utilisateur s'est déconnecté et/ou a cloturé sa session dans l'application"
+        },
+        {
+            "name": "disconnect",
+            "id": "http://www.uliege.be/smart/xAPITerms/verbs/disconnected",
+            "display": {
+                "fr-FR": "est désinscrit"
+            },
+            "description": "L'utilisateur à désactivé son affiliation au service."
+        },
+        {
+            "name": "gave",
+            "id": "http://activitystrea.ms/schema/1.0/give",
+            "display": {
+                "fr-FR": "à donné"
+            },
+            "description": "L'utilisateur à donné une information."
+        },
+        {
+            "name": "updated",
+            "id": "http://activitystrea.ms/schema/1.0/update",
+            "display": {
+                "fr-FR": "à mis à jour",
+                "en-US": "updated"
+            },
+            "description": "The \"update\" verb indicates that the actor has modified the object. Use of the \"update\" verb is generally reserved to indicate modifications to existing objects or data such as changing user's status or mood, or an existing user's profile information."
+        }
+    ]
+}

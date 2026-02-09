@@ -1,6 +1,6 @@
 <?php
 
-namespace LRSDA\Server\LRSConnector;
+namespace LRSDA\Server\Configs;
 
 class Configuration
 {

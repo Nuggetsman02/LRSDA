@@ -3,7 +3,7 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use LRSDA\Server\LRSConnector\LRSConnectionCheck;
-use LRSDA\Server\LRSConnector\Configuration;
+use LRSDA\Server\Configs\Configuration;
 use LRSDA\Server\Services\StatementService;
 use Slim\Factory\AppFactory;
 use DI\ContainerBuilder;
@@ -16,7 +16,7 @@ $containerBuilder = new ContainerBuilder();
 
 // Définir les dépendances dans le conteneur
 $containerBuilder->addDefinitions([
-    // On définit le Client Guzzle une seule fois pour tout le monde
+    // On définit le Client Guzzle une seule fois
     Client::class => function () {
         $xapi = Configuration::getInstance()->xapi();
         return new Client([

@@ -5,6 +5,7 @@ namespace LRSDA\Server\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use LRSDA\Server\Services\StatementService;
+use LRSDA\Server\Services\XapiRegistry; 
 
 class ExportController
 {
@@ -17,20 +18,66 @@ class ExportController
 
     public function export(Request $request, Response $response): Response
     {
-        $filters = $request->getQueryParams();
+        // 1. Récupération des choix utilisateur
+        $params = $request->getParsedBody();
+        $Filters = json_decode($params['filters'] ?? '{}', true);
 
-        $statements = $this->statementService->getStatements($filters);
+        // 2. Initialisation de la Registry
+        $registry = XapiRegistry::getInstance();
 
+        $xApiFilters = [];
+
+        // --- A. FILTRES POUR LE LRS (Dates & Verbes) ---
+
+        // Dates
+        if (!empty($Filters['start_date'])) {
+            $xApiFilters['since'] = $Filters['start_date'] . 'T00:00:00Z';
+        }
+        if (!empty($Filters['end_date'])) {
+            $xApiFilters['until'] = $Filters['end_date'] . 'T23:59:59Z';
+        }
+
+        // Verbes (C'est ici que ton problème "tous les verbes" est corrigé)
+        if (!empty($Filters['verbs'])) {
+            // On traduit "completed" -> "http://.../complete"
+            $verbInfo = $registry->getVerb($Filters['verbs'][0], true);
+            
+            // Sécurité : On n'ajoute le filtre QUE si la traduction a réussi
+            if ($verbInfo && isset($verbInfo['id'])) {
+                $xApiFilters['verb'] = $verbInfo['id'];
+            }
+        }
+
+        // --- B. APPEL AU LRS ---
+        
+        // On récupère tout ce qui correspond aux dates et au verbe
+        $statements = $this->statementService->getStatements($xApiFilters);
+
+
+        // --- C. FILTRE COMPLÉMENTAIRE PHP (Pour le Type d'Activité) ---
+
+        if (!empty($Filters['objects'])) {
+            // On traduit "Assessment" -> "http://.../activities/assessment"
+            $targetType = $registry->get($Filters['objects'][0], 'type');
+
+            if ($targetType) {
+                // On garde uniquement les statements dont l'objet est du bon TYPE
+                $statements = array_filter($statements, function($stmt) use ($targetType) {
+                    // On suppose que ta méthode getDefinition() dans StatementObject renvoie le type
+                    // Si dans ton modèle c'est getType(), change ci-dessous :
+                    return $stmt->getObject()->getDefinition() === $targetType;
+                });
+            }
+        }
+
+        // 4. Export CSV
         $csvContent = $this->statementService->exportStatementsToCsv($statements);
 
         $response->getBody()->write($csvContent);
-
+        
         return $response
             ->withHeader('Content-Type', 'text/csv; charset=utf-8')
-            ->withHeader('Content-Description', 'File Transfer')
-            ->withHeader('Content-Disposition', 'attachment; filename="lrs_export_' . date('Y-m-d_H-i') . '.csv"')
-            ->withHeader('Expires', '0')
-            ->withHeader('Cache-Control', 'must-revalidate')
-            ->withHeader('Pragma', 'public');
+            ->withHeader('Content-Disposition', 'attachment; filename="export_lrs.csv"')
+            ->withHeader('Cache-Control', 'no-cache');
     }
 }
