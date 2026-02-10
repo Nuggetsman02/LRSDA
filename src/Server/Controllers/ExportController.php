@@ -20,49 +20,75 @@ class ExportController
     {
         // 1. Récupération des choix utilisateur
         $params = $request->getParsedBody();
+        // Décodage des filtres envoyés par le JS
         $Filters = json_decode($params['filters'] ?? '{}', true);
 
         // 2. Initialisation de la Registry
         $registry = XapiRegistry::getInstance();
 
-        $xApiFilters = [];
+        // --- CONSTRUCTION DU FILTRE CONNECTION API (MongoDB) ---
+        $mongoFilter = [];
 
-        // --- A. FILTRES POUR LE LRS (Dates & Verbes) ---
-
-        // Dates
-        if (!empty($Filters['start_date'])) {
-            $xApiFilters['since'] = $Filters['start_date'] . 'T00:00:00Z';
+        // A. Filtre par Date (statement.stored)
+        if (!empty($Filters['start_date']) && !empty($Filters['end_date'])) {
+            $mongoFilter['statement.stored'] = [
+                '$gte' => $Filters['start_date'] . 'T00:00:00Z',
+                '$lte' => $Filters['end_date'] . 'T23:59:59Z'
+            ];
+        } elseif (!empty($Filters['start_date'])) {
+             $mongoFilter['statement.stored']['$gte'] = $Filters['start_date'] . 'T00:00:00Z';
         }
-        if (!empty($Filters['end_date'])) {
-            $xApiFilters['until'] = $Filters['end_date'] . 'T23:59:59Z';
-        }
 
-        // Verbes (C'est ici que ton problème "tous les verbes" est corrigé)
-        if (!empty($Filters['verbs'])) {
-            $verbInfo = $registry->getVerb($Filters['verbs'][0], true);
+        // B. Filtre par Verbe (CORRIGÉ POUR CHOIX MULTIPLES)
+        if (!empty($Filters['verbs']) && is_array($Filters['verbs'])) {
+            $verbIds = [];
             
-            if ($verbInfo && isset($verbInfo['id'])) {
-                $xApiFilters['verb'] = $verbInfo['id'];
+            // On boucle sur tous les verbes sélectionnés (ex: 'loggedin', 'loggedout')
+            foreach ($Filters['verbs'] as $verbName) {
+                $verbInfo = $registry->getVerb($verbName, true);
+                if ($verbInfo && isset($verbInfo['id'])) {
+                    $verbIds[] = $verbInfo['id'];
+                }
+            }
+
+            // Si on a trouvé des IDs valides
+            if (!empty($verbIds)) {
+                if (count($verbIds) === 1) {
+                    // Un seul verbe : égalité simple
+                    $mongoFilter['statement.verb.id'] = $verbIds[0];
+                } else {
+                    // Plusieurs verbes : on utilise l'opérateur $in
+                    $mongoFilter['statement.verb.id'] = ['$in' => $verbIds];
+                }
             }
         }
 
-        // --- B. APPEL AU LRS ---
-        $statements = $this->statementService->getStatements($xApiFilters);
+        // C. Filtre par Type d'Activité (CORRIGÉ POUR CHOIX MULTIPLES)
+        if (!empty($Filters['objects']) && is_array($Filters['objects'])) {
+            $typeUris = [];
 
+            foreach ($Filters['objects'] as $objectName) {
+                // On récupère le type (ex: http://adlnet.gov/expapi/activities/assessment)
+                $uri = $registry->get($objectName, 'type'); 
+                if ($uri) {
+                    $typeUris[] = $uri;
+                }
+            }
 
-        // --- C. FILTRE COMPLÉMENTAIRE PHP (Pour le Type d'Activité) ---
-
-        if (!empty($Filters['objects'])) {
-            $targetType = $registry->get($Filters['objects'][0], 'type');
-
-            if ($targetType) {
-                $statements = array_filter($statements, function($stmt) use ($targetType) {
-                    return $stmt->getObject()->getDefinition() === $targetType;
-                });
+            if (!empty($typeUris)) {
+                if (count($typeUris) === 1) {
+                    $mongoFilter['statement.object.definition.type'] = $typeUris[0];
+                } else {
+                    // Opérateur $in pour chercher l'un OU l'autre type
+                    $mongoFilter['statement.object.definition.type'] = ['$in' => $typeUris];
+                }
             }
         }
 
-        // 4. Export CSV
+        // --- APPEL AU SERVICE ---
+        $statements = $this->statementService->getStatements($mongoFilter);
+
+        // 4. Export CSV (Inchangé)
         $csvContent = $this->statementService->exportStatementsToCsv($statements);
 
         $response->getBody()->write($csvContent);

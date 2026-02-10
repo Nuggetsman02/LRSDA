@@ -13,7 +13,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 // 1. CHARGEMENT DE LA CONFIGURATION
 try {
-    $xapiSettings = Configuration::getInstance()->xapi(); 
+    $xapiSettings = Configuration::getInstance()->api_v2(); 
 } catch (\Exception $e) {
     die("Erreur critique de configuration : " . $e->getMessage());
 }
@@ -50,7 +50,7 @@ $containerBuilder->addDefinitions([
 
     // Autowiring : PHP-DI crée automatiquement ces classes avec leurs dépendances
     StatementService::class => \DI\autowire(StatementService::class),
-    ExportController::class => \DI\autowire(ExportController::class), // LIGNE ESSENTIELLE
+    ExportController::class => \DI\autowire(ExportController::class),
 ]);
 
 $container = $containerBuilder->build();
