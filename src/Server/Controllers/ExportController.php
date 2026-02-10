@@ -39,32 +39,24 @@ class ExportController
 
         // Verbes (C'est ici que ton problème "tous les verbes" est corrigé)
         if (!empty($Filters['verbs'])) {
-            // On traduit "completed" -> "http://.../complete"
             $verbInfo = $registry->getVerb($Filters['verbs'][0], true);
             
-            // Sécurité : On n'ajoute le filtre QUE si la traduction a réussi
             if ($verbInfo && isset($verbInfo['id'])) {
                 $xApiFilters['verb'] = $verbInfo['id'];
             }
         }
 
         // --- B. APPEL AU LRS ---
-        
-        // On récupère tout ce qui correspond aux dates et au verbe
         $statements = $this->statementService->getStatements($xApiFilters);
 
 
         // --- C. FILTRE COMPLÉMENTAIRE PHP (Pour le Type d'Activité) ---
 
         if (!empty($Filters['objects'])) {
-            // On traduit "Assessment" -> "http://.../activities/assessment"
             $targetType = $registry->get($Filters['objects'][0], 'type');
 
             if ($targetType) {
-                // On garde uniquement les statements dont l'objet est du bon TYPE
                 $statements = array_filter($statements, function($stmt) use ($targetType) {
-                    // On suppose que ta méthode getDefinition() dans StatementObject renvoie le type
-                    // Si dans ton modèle c'est getType(), change ci-dessous :
                     return $stmt->getObject()->getDefinition() === $targetType;
                 });
             }

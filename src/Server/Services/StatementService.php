@@ -30,18 +30,35 @@ class StatementService
      */
     public function getStatements(array $filters = []): array
     {
-        // Requête au LRS pour récupérer les statements
-        $response = $this->client->get('statements', [
-            'query' => $filters
-        ]);
+        $allRawStatements = [];
+        $moreUrl = null;
 
-        // Transformation de la réponse en objets Statement
-        $data = json_decode($response->getBody()->getContents(), true);
+        // 1. BOUCLE DE PAGINATION (Récupération intégrale)
+        do {
+            if ($moreUrl) {
+                $response = $this->client->get($moreUrl);
+            } else {
+                $response = $this->client->get('statements', [
+                    'query' => $filters
+                ]);
+            }
+
+            $data = json_decode($response->getBody()->getContents(), true);
+
+            if (isset($data['statements'])) {
+                $allRawStatements = array_merge($allRawStatements, $data['statements']);
+            }
+
+            $moreUrl = $data['more'] ?? null;
+
+        } while (!empty($moreUrl));
+
+        // 2. TRANSFORMATION EN OBJETS
         $statements = [];
 
-        // Parcours des statements bruts pour les transformer en objets Statement
-        foreach ($data['statements'] ?? [] as $raw) {
-
+        foreach ($allRawStatements as $raw) {
+            
+            // --- ACTOR ---
             $ActorAccountRaw = $raw['actor']['account'] ?? [];
             $ActorAccount = new StatementAccount(
                 $ActorAccountRaw['name'] ?? '',
@@ -53,42 +70,58 @@ class StatementService
                 $ActorAccount
             );
 
+            // --- VERB ---
             $displayMap = $raw['verb']['display'] ?? [];
-            $displayText = $displayMap['fr-FR'] ?? current($displayMap) ?? 'unknown';
-
+            $verbDisplay = $displayMap['fr-FR'] ?? current($displayMap) ?? 'unknown';
+            
             $verb = new StatementVerb(
                 $raw['verb']['id'] ?? '',
-                (string)$displayText
+                $verbDisplay
             );
+
+            // --- OBJECT ---
+            $objDef = $raw['object']['definition'] ?? [];
+            $objNameMap = $objDef['name'] ?? [];
+            $objName = $objNameMap['fr-FR'] ?? current($objNameMap) ?? 'unknown';
 
             $object = new StatementObject(
-                $raw['object']['objectType'] ?? '',
                 $raw['object']['id'] ?? '',
-                $raw['object']['definition']['type'] ?? ''
+                $raw['object']['objectType'] ?? 'Activity',
+                $objDef['type'] ?? '',
+                $objName
             );
 
-            $authorityAccountRaw = $raw['authority']['account'] ?? [];
-            $authorityAccount = new StatementAccount(
-                $authorityAccountRaw['name'] ?? '',
-                $authorityAccountRaw['homePage'] ?? '',
+            // --- AUTHORITY ---
+            $authRaw = $raw['authority'] ?? [];
+            $authAccountRaw = $authRaw['account'] ?? [];
+            
+            $authAccount = new StatementAccount(
+                $authAccountRaw['name'] ?? 'unknown',
+                $authAccountRaw['homePage'] ?? 'unknown'
             );
 
             $authority = new StatementAuthority(
-                $raw['authority']['objectType'] ?? 'Agent',
-                $raw['authority']['name'] ?? '',
-                $authorityAccount
+                $authRaw['objectType'] ?? 'Group',
+                $authRaw['name'] ?? 'unknown',
+                $authAccount
             );
 
-            $statements[] = new Statement(
-                $raw['id'] ?? '',
-                $actor,
-                $verb,
-                new \DateTime($raw['timestamp'] ?? 'now'),
-                $object,
-                new \DateTime($raw['stored'] ?? 'now'),
-                $authority,
-                $raw['version'] ?? 'unknown'
-            );
+            // --- STATEMENT ---
+            try {
+                $statements[] = new Statement(
+                    $raw['id'] ?? '',
+                    $actor,
+                    $verb,
+                    new \DateTime($raw['timestamp'] ?? 'now'),
+                    $object,
+                    new \DateTime($raw['stored'] ?? 'now'),
+                    $authority,
+                    $raw['version'] ?? 'unknown'
+                );
+            } catch (\Exception $e) {
+                // Gestion erreur parsing date si nécessaire
+                continue; 
+            }
         }
 
         return $statements;

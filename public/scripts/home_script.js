@@ -179,8 +179,8 @@
             const payload = {
                 start_date: startDate ? startDate.value : '',
                 end_date: endDate ? endDate.value : '',
-                verbs: verbsList,      // <--- Si verbsList est un Array, JSON.stringify le gardera en Array
-                activity: objectsList
+                verbs: verbsList,
+                objects: objectsList
             };
             
             // Création du formulaire invisible pour l'envoi POST
