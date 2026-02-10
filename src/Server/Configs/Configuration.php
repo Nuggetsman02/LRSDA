@@ -54,4 +54,15 @@ class Configuration
         }
         return $this->config['xapi'];
     }
+
+    public function api_v2(): array
+    {
+        if (!isset($this->config['api_v2'])) {
+            // @codeCoverageIgnoreStart
+            // exception case
+            throw new \Exception(__METHOD__ . " : [api_v2] config should be set to use LRSConnector. RTFM.");
+            // @codeCoverageIgnoreEnd
+        }
+        return $this->config['api_v2'];
+    }
 }

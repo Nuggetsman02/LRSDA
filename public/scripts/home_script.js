@@ -1,6 +1,4 @@
 (() => {
-    console.log("--- SCRIPT LRS DATA ANALYST CHARGÉ ---");
-
     const headerRow = document.getElementById('table-header');
     const body = document.getElementById('table-body');
     const selectAllBtn = document.getElementById('select-all');
@@ -21,17 +19,23 @@
      * @param {string} dropdownName - Le nom affiché par défaut (ex: "Verbes", "Activités")
      */
     function getValuesFromDropdown(dropdownName) {
-        let result = [];
-        dropdowns.forEach(container => {
-            const btnText = container.querySelector('.btn-text');
-            // On vérifie si c'est le bon menu en regardant son attribut data-default
-            if (btnText && btnText.getAttribute('data-default') === dropdownName) {
-                const checkedItems = container.querySelectorAll('.item.checked');
-                result = Array.from(checkedItems).map(item => item.getAttribute('data-name'));
-            }
-        });
-        return result;
-    }
+    let result = [];
+    dropdowns.forEach(container => {
+        const btnText = container.querySelector('.btn-text');
+        // On vérifie que c'est le bon menu (Verbes ou Activités)
+        if (btnText && btnText.getAttribute('data-default') === dropdownName) {
+            const checkedItems = container.querySelectorAll('.item.checked');
+            checkedItems.forEach(item => {
+                // On récupère le "data-name" défini dans votre HTML
+                const name = item.getAttribute('data-name');
+                if (name) {
+                    result.push(name);
+                }
+            });
+        }
+    });
+    return result; // Retourne maintenant ex: ["login", "logout"]
+}
 
     /**
      * Récupère simplement le texte pour l'affichage du tableau de prévisualisation
@@ -168,17 +172,17 @@
             const verbsList = getValuesFromDropdown('Verbes');
             const objectsList = getValuesFromDropdown('Activités'); 
 
-            console.log("Export en cours...");
-            console.log("- Verbes:", verbsList);
-            console.log("- Objets:", objectsList);
+            // DEBUG : Vérifiez ceci dans la console du navigateur (F12) avant l'envoi
+            console.log("Verbes envoyés :", verbsList); // Doit afficher Array(2) ["...", "..."]
+            console.log("Type :", typeof verbsList);    // Doit afficher "object" (car un array est un objet en JS)
 
             const payload = {
                 start_date: startDate ? startDate.value : '',
                 end_date: endDate ? endDate.value : '',
-                verbs: verbsList,
-                objects: objectsList
+                verbs: verbsList,      // <--- Si verbsList est un Array, JSON.stringify le gardera en Array
+                activity: objectsList
             };
-
+            
             // Création du formulaire invisible pour l'envoi POST
             const form = document.createElement('form');
             form.method = 'POST';

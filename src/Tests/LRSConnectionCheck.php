@@ -1,6 +1,6 @@
 <?php
 
-namespace LRSDA\Server\LRSConnector;
+namespace LRSDA\Tests;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
