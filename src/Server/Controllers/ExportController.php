@@ -63,12 +63,11 @@ class ExportController
             }
         }
 
-        // C. Filtre par Type d'Activité (CORRIGÉ POUR CHOIX MULTIPLES)
+        // C. Filtre par Type d'Activité
         if (!empty($Filters['objects']) && is_array($Filters['objects'])) {
             $typeUris = [];
 
             foreach ($Filters['objects'] as $objectName) {
-                // On récupère le type (ex: http://adlnet.gov/expapi/activities/assessment)
                 $uri = $registry->get($objectName, 'type'); 
                 if ($uri) {
                     $typeUris[] = $uri;

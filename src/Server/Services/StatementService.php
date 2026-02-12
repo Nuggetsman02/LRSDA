@@ -42,7 +42,6 @@ class StatementService
             $queryParams = [
                 'filter' => $jsonFilter,
                 'first'  => 500,
-                // On trie sur la date d'enregistrement (stored) qui est à la racine du doc MongoDB
                 'sort'   => json_encode(['stored' => -1]) 
             ];
 
@@ -62,14 +61,13 @@ class StatementService
             }
 
             foreach ($data['edges'] as $edge) {
-                // $mongoDoc est le document complet de la base de données
                 $mongoDoc = $edge['node'] ?? null;
 
                 if (!$mongoDoc || !isset($mongoDoc['statement'])) {
                     continue;
                 }
 
-                // $raw devient le statement xAPI pur (ce qui vous intéresse)
+                // $raw devient le statement xAPI
                 $raw = $mongoDoc['statement'];
 
                 // --- LOGIQUE DE PARSING (Adaptée pour récupérer 'stored' correctement) ---
@@ -88,7 +86,6 @@ class StatementService
 
                 // --- VERB ---
                 $displayMap = $raw['verb']['display'] ?? [];
-                // On essaie de récupérer le français, sinon l'anglais, sinon le premier dispo
                 $verbDisplay = $displayMap['fr-FR'] ?? $displayMap['en-US'] ?? current($displayMap) ?? 'unknown';
                 
                 $verb = new StatementVerb(
@@ -124,8 +121,6 @@ class StatementService
                 );
 
                 // --- DATES ---
-                // 'stored' est souvent géré par le LRS au niveau racine du document ($mongoDoc)
-                // 'timestamp' est géré par le client xAPI au niveau du statement ($raw)
                 $storedDate = $mongoDoc['stored'] ?? $raw['stored'] ?? 'now';
                 $timestampDate = $raw['timestamp'] ?? 'now';
 
