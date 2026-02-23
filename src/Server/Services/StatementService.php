@@ -67,10 +67,7 @@ class StatementService
                     continue;
                 }
 
-                // $raw devient le statement xAPI
                 $raw = $mongoDoc['statement'];
-
-                // --- LOGIQUE DE PARSING (Adaptée pour récupérer 'stored' correctement) ---
 
                 // --- ACTOR ---
                 $ActorAccountRaw = $raw['actor']['account'] ?? [];

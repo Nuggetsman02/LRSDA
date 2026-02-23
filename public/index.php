@@ -4,6 +4,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use LRSDA\Server\Controllers\ExportController;
 use LRSDA\Server\Services\StatementService;
+use LRSDA\Server\Services\QueryService;
 use LRSDA\Server\Configs\Configuration;
 use Slim\Factory\AppFactory;
 use DI\ContainerBuilder;
@@ -11,7 +12,7 @@ use GuzzleHttp\Client;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-// 1. CHARGEMENT DE LA CONFIGURATION
+// CHARGEMENT DE LA CONFIGURATION
 try {
     $xapiSettings = Configuration::getInstance()->api_v2(); 
 } catch (\Exception $e) {
@@ -20,7 +21,7 @@ try {
 
 $containerBuilder = new ContainerBuilder();
 
-// 2. DÉFINITIONS DU CONTENEUR (Injection de Dépendances)
+// DÉFINITIONS DU CONTENEUR (Injection de Dépendances)
 $containerBuilder->addDefinitions([
     
     'settings.xapi' => $xapiSettings,
@@ -51,13 +52,14 @@ $containerBuilder->addDefinitions([
     // Autowiring : PHP-DI crée automatiquement ces classes avec leurs dépendances
     StatementService::class => \DI\autowire(StatementService::class),
     ExportController::class => \DI\autowire(ExportController::class),
+    QueryService::class => \DI\autowire(QueryService::class),
 ]);
 
 $container = $containerBuilder->build();
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 
-// 3. MIDDLEWARES
+//MIDDLEWARES
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 
@@ -68,7 +70,7 @@ $app->addRoutingMiddleware();
  */
 $app->addErrorMiddleware(true, true, true);
 
-// 4. ROUTES
+// ROUTES
 
 // Route Accueil : Redirection vers l'interface
 $app->get('/', function (Request $request, Response $response) {
