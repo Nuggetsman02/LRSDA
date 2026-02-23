@@ -138,7 +138,7 @@ class StatementService
                         $object,
                         new \DateTime($storedDate),
                         $authority,
-                        $raw["version"] ?? 'unknown'
+                        $raw['version'] ?? 'unknown'
                     );
                 } catch (\Exception $e) {
                     continue; 
