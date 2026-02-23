@@ -22,7 +22,7 @@ class QueryService
     {
         $mongoFilter = [];
 
-        // A. Filtre par Date
+        // Filtre par Date
         if (!empty($rawFilters['start_date']) && !empty($rawFilters['end_date'])) {
             $mongoFilter['statement.stored'] = [
                 '$gte' => $rawFilters['start_date'] . 'T00:00:00Z',
@@ -32,7 +32,7 @@ class QueryService
              $mongoFilter['statement.stored']['$gte'] = $rawFilters['start_date'] . 'T00:00:00Z';
         }
 
-        // B. Filtre par Verbe
+        // Filtre par Verbe
         if (!empty($rawFilters['verbs']) && is_array($rawFilters['verbs'])) {
             $verbIds = [];
             foreach ($rawFilters['verbs'] as $verbName) {
@@ -47,7 +47,7 @@ class QueryService
             }
         }
 
-        // C. Filtre par Type d'Activité
+        // Filtre par Activité
         if (!empty($rawFilters['objects']) && is_array($rawFilters['objects'])) {
             $typeUris = [];
             foreach ($rawFilters['objects'] as $objectName) {

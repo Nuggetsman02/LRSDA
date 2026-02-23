@@ -11,12 +11,14 @@ class StatementObject
     private string $objectType;
     private string $id;
     private string $definition;
+    private string $name;
 
-    public function __construct(string $objectType, string $id, string $definition)
+    public function __construct(string $objectType, string $id, string $definition, string $name)
     {
         $this->objectType = $objectType;
         $this->id = $id;
         $this->definition = $definition;
+        $this->name = $name;
     }
 
     public function getObjectType(): string
@@ -47,5 +49,15 @@ class StatementObject
     public function setDefinition(string $definition): void
     {
         $this->definition = $definition;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
     }
 }

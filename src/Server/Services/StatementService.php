@@ -2,6 +2,7 @@
 
 namespace LRSDA\Server\Services;
 
+use LRSDA\Server\Services\XapiRegistry;
 use GuzzleHttp\Client;
 use LRSDA\Server\Models\{
     Statement,
@@ -19,10 +20,13 @@ class StatementService
 
 {
     private Client $client;
+    private XapiRegistry $registry;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, XapiRegistry $registry)
     {
         $this->client = $client;
+        $this->registry = $registry;
+
     }
 
     /**
@@ -84,21 +88,24 @@ class StatementService
                 // --- VERB ---
                 $displayMap = $raw['verb']['display'] ?? [];
                 $verbDisplay = $displayMap['fr-FR'] ?? $displayMap['en-US'] ?? current($displayMap) ?? 'unknown';
+
+                // Tentative de récupération du nom du verb depuis l'id', sinon 'unknown'
+                $verbName = $this->registry->verbReverseLookup($raw['verb']['id'] ?? '');
                 
                 $verb = new StatementVerb(
                     $raw['verb']['id'] ?? '',
-                    $verbDisplay
+                    $verbDisplay,
+                    $verbName
                 );
 
                 // --- OBJECT ---
-                $objDef = $raw['object']['definition'] ?? [];
-                $objNameMap = $objDef['name'] ?? [];
-                $objName = $objNameMap['fr-FR'] ?? $objNameMap['en-US'] ?? current($objNameMap) ?? 'unknown';
+                // Tentative de récupération du nom de l'objet depuis le type de la définition, sinon 'unknown'
+                $objName = $this->registry->activityReverseLookup($raw['object']['definition']['type'] ?? '');
 
                 $object = new StatementObject(
+                    $raw['object']['objectType'] ?? '',
                     $raw['object']['id'] ?? '',
-                    $raw['object']['objectType'] ?? 'Activity',
-                    $objDef['type'] ?? '',
+                    $raw['object']['definition']['type'] ?? '',
                     $objName
                 );
 
@@ -131,7 +138,7 @@ class StatementService
                         $object,
                         new \DateTime($storedDate),
                         $authority,
-                        $raw['version'] ?? '1.0.0'
+                        $raw["version"] ?? 'unknown'
                     );
                 } catch (\Exception $e) {
                     continue; 
@@ -166,11 +173,13 @@ class StatementService
             'Actor Account Name',
             'Actor Account HomePage',
             'Verb ID',
+            'Verb Name',
             'Verb Display',
             'Timestamp',
             'Object Type',
             'Object ID',
             'Object Definition',
+            'Object Name',
             'Stored',
             'Authority Type',
             'Authority Name',
@@ -189,6 +198,7 @@ class StatementService
                 $statement->getActor()->getAccount()->getHomePage(),
 
                 $statement->getVerb()->getId(),
+                $statement->getVerb()->getName(),
                 $statement->getVerb()->getDisplay(),
                 
                 $statement->getTimestamp()->format('c'),
@@ -196,6 +206,7 @@ class StatementService
                 $statement->getObject()->getObjectType(),
                 $statement->getObject()->getId(),
                 $statement->getObject()->getDefinition(),
+                $statement->getObject()->getName(),
 
                 $statement->getStored()->format('c'),
 
