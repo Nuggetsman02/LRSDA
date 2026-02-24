@@ -12,31 +12,18 @@ services:
       - ../LRSDA:/workspace
     environment:
       XDEBUG_CONFIG: remote_host=host.docker.internal
-    # depends_on:
-    #   - mysql
     networks:
       - lrsda-network
-  # mysql:
-  #   image: mariadb:latest
-  #   volumes:
-  #     - ./.devcontainer/_sql:/var/lib/mysql
-  #   restart: always
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: rootpwd
-  #   networks:
-  #     - aca-network
-  # phpmyadmin:
-  #   image: phpmyadmin/phpmyadmin:latest
-  #   ports:
-  #     - 8201:80
-  #   environment:
-  #     - PMA_HOST=mysql
-  #     - PMA_USER=root
-  #     - PMA_PASSWORD=rootpwd
-  #   depends_on:
-  #     - mysql
-  #   networks:
-  #     - aca-network
+  idp_test:
+    image: kristophjunge/test-saml-idp
+    container_name: idp_test
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      - SIMPLESAMLPHP_SP_ENTITY_ID=mon-application-super-cool
+    networks:
+      - lrsda-network
 networks:
   lrsda-network:
     name: lrsda-network

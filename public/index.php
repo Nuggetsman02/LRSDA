@@ -45,11 +45,11 @@ $containerBuilder->addDefinitions([
                 'Authorization'            => $authHeader,
                 'Content-Type'             => 'application/json',
             ],
-            'timeout'  => 30.0, // Augmenté à 30s pour les gros exports CSV
+            'timeout'  => 30.0,
         ]);
     },
 
-    // Autowiring : PHP-DI crée automatiquement ces classes avec leurs dépendances
+    // Autowiring
     StatementService::class => \DI\autowire(StatementService::class),
     ExportController::class => \DI\autowire(ExportController::class),
     QueryService::class => \DI\autowire(QueryService::class),
@@ -70,8 +70,20 @@ $app->addRoutingMiddleware();
  */
 $app->addErrorMiddleware(true, true, true);
 
-// ROUTES
 
+//  TEST DE CONNEXION LRS
+// $client = $container->get(Client::class);
+// $checker = new \LRSDA\Tests\LRSConnectionCheck($client);
+// echo "<h1>Test de connexion LRS</h1>";
+// if ($checker->pingLRS()) {
+//     echo "✅ Connexion au LRS réussie !";
+// } else {
+//     echo "Échec de la connexion au LRS.</p>";
+// }
+// die(); // On arrête l'exécution ici pour ne pas charger le reste de l'application
+
+
+// ROUTES
 // Route Accueil : Redirection vers l'interface
 $app->get('/', function (Request $request, Response $response) {
     return $response
@@ -80,8 +92,7 @@ $app->get('/', function (Request $request, Response $response) {
 });
 
 // Chargement des fichiers de routes externes
-// Assurez-vous que les chemins sont corrects par rapport à index.php
-call_user_func(require __DIR__ . '/../src/Routes/route_test.php', $app);
+// call_user_func(require __DIR__ . '/../src/Routes/route_test.php', $app);
 call_user_func(require __DIR__ . '/../src/Routes/export_route.php', $app);
 
 $app->run();
