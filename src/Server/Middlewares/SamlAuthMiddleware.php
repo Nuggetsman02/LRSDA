@@ -2,10 +2,11 @@
 
 namespace LRSDA\Server\Middlewares;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 use SimpleSAML\Auth\Simple;
-use Slim\Psr7\Response;
+
 
 class SamlAuthMiddleware
 {
