@@ -3,7 +3,7 @@
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use LRSDA\Server\Controllers\ExportController;
-use LRSDA\Server\Middleware\SamlAuthMiddleware;
+use LRSDA\Server\Middlewares\SamlAuthMiddleware;
 use LRSDA\Server\Services\StatementService;
 use LRSDA\Server\Services\QueryService;
 use LRSDA\Server\Configs\Configuration;

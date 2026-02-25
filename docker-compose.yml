@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   lrs_data_analyst:
     build:
@@ -12,6 +10,7 @@ services:
       - ../LRSDA:/workspace
     environment:
       XDEBUG_CONFIG: remote_host=host.docker.internal
+      SIMPLESAMLPHP_CONFIG_DIR: /workspace/simplesamlphp/config
     networks:
       - lrsda-network
   idp_test:
@@ -21,7 +20,8 @@ services:
       - "8080:8080"
       - "8443:8443"
     environment:
-      - SIMPLESAMLPHP_SP_ENTITY_ID=mon-application-super-cool
+      - SIMPLESAMLPHP_SP_ENTITY_ID=LRS_data_analyst
+      - SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE=http://lrs_data_analyst:80/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp
     networks:
       - lrsda-network
 networks:

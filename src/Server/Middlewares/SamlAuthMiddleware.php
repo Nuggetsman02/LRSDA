@@ -1,6 +1,6 @@
 <?php
 
-namespace LRSDA\Server\Middleware;
+namespace LRSDA\Server\Middlewares;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
