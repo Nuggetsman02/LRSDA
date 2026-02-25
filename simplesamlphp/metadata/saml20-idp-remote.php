@@ -1,19 +1,19 @@
 <?php
-$metadata['http://localhost:8080/simplesaml/saml2/idp/metadata.php'] = array (
+$metadata['http://localhost:8080/simplesaml/saml2/idp/metadata.php'] = array(
   'metadata-set' => 'saml20-idp-remote',
   'entityid' => 'http://localhost:8080/simplesaml/saml2/idp/metadata.php',
-  'SingleSignOnService' => 
-  array (
-    0 => 
-    array (
+  'SingleSignOnService' =>
+  array(
+    0 =>
+    array(
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
       'Location' => 'http://localhost:8080/simplesaml/saml2/idp/SSOService.php',
     ),
   ),
-  'SingleLogoutService' => 
-  array (
-    0 => 
-    array (
+  'SingleLogoutService' =>
+  array(
+    0 =>
+    array(
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
       'Location' => 'http://localhost:8080/simplesaml/saml2/idp/SingleLogoutService.php',
     ),

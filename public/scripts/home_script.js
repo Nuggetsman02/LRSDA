@@ -52,7 +52,6 @@
         const count = document.querySelectorAll('.item.checked').length;
         if (count > 0) {
             downloadBtn.removeAttribute('disabled');
-            // downloadBtn.classList.remove('disabled'); // Décommenter si vous avez une classe CSS spécifique
         } else {
             downloadBtn.setAttribute('disabled', 'true');
         }
@@ -68,7 +67,7 @@
 
         const selectedLabels = getSelectedLabels();
 
-        // Colonne d'index toujours présente
+        // Colonne d'index
         const indexTh = document.createElement('th');
         indexTh.textContent = '#';
         headerRow.appendChild(indexTh);
@@ -87,7 +86,7 @@
             headerRow.appendChild(th);
         });
 
-        // Remplissage factice (5 lignes pour l'exemple)
+        // Remplissage factice
         for (let r = 1; r <= 5; r++) {
             const tr = document.createElement('tr');
             tr.innerHTML = `<td>${r}</td>`;
@@ -167,14 +166,12 @@
         downloadBtn.addEventListener('click', (e) => {
             // e.preventDefault(); // Utile si le bouton est dans un <form> existant
 
-            // Récupération via la fonction robuste (par Nom de menu)
-            // ATTENTION : Ces noms doivent correspondre à l'attribut data-default dans votre HTML
             const verbsList = getValuesFromDropdown('Verbes');
             const objectsList = getValuesFromDropdown('Activités'); 
 
             // DEBUG : Vérifiez ceci dans la console du navigateur (F12) avant l'envoi
-            console.log("Verbes envoyés :", verbsList); // Doit afficher Array(2) ["...", "..."]
-            console.log("Type :", typeof verbsList);    // Doit afficher "object" (car un array est un objet en JS)
+            // console.log("Verbes envoyés :", verbsList); // Doit afficher Array(2) ["...", "..."]
+            // console.log("Type :", typeof verbsList);    // Doit afficher "object" (car un array est un objet en JS)
 
             const payload = {
                 start_date: startDate ? startDate.value : '',
