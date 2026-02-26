@@ -73,7 +73,7 @@ $app->addErrorMiddleware(true, true, true);
 
 
 //  TEST DE CONNEXION LRS
-// client = $container->get(Client::class);
+// $client = $container->get(Client::class);
 // $checker = new \LRSDA\Tests\LRSConnectionCheck($client);
 // echo "<h1>Test de connexion LRS</h1>";
 // if ($checker->pingLRS()) {
@@ -91,21 +91,12 @@ $app->get('/', function (Request $request, Response $response) {
     $response->getBody()->write($html);
 
     return $response;
-})->add(SamlAuthMiddleware::class);
+})
+->add(SamlAuthMiddleware::class);
 
 // Chargement des fichiers de routes externes
 // call_user_func(require __DIR__ . '/../src/Routes/route_test.php', $app);
 call_user_func(require __DIR__ . '/../src/Routes/export_route.php', $app);
 
-// AJOUTE CECI JUSTE AVANT $app->run();
-// $app->add(function ($request, $handler) {
-//     $response = $handler->handle($request);
-//     // Si c'est une 404, on affiche le chemin reçu par Slim
-//     if ($response->getStatusCode() === 404) {
-//         echo "Slim essaie de trouver une route pour : '" . $request->getUri()->getPath() . "'";
-//         exit;
-//     }
-//     return $response;
-// });
 
 $app->run();

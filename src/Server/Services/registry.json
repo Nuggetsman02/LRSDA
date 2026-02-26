@@ -314,7 +314,7 @@
             "display": {
                 "fr-FR": "a accedé"
             },
-            "description": "l'Acteur a accédé à un l'élément associé (un Resultat, un Feedback, un Survey), il l'a 'visualisé' et n'a pe rien fait d'autre"
+            "description": "l'Acteur a accédé à un l'élément associé (un Resultat, un Feedback, un Survey), il l'a 'visualisé' et n'a rien fait d'autre"
         },
         {
             "name": "acknowledge",
