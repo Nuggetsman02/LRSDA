@@ -11,8 +11,6 @@ $config = [
     'datadir'     => '/workspace/simplesamlphp/data',
     'metadatadir' => '/workspace/simplesamlphp/metadata',
 
-
-
     'technicalcontact_name' => 'Damien Depluvrez',
     'technicalcontact_email' => 'damien.depluvrez@uliege.be',
 
@@ -115,7 +113,7 @@ $config = [
     'session.cookie.lifetime' => 0,
     'session.cookie.path' => '/',
     'session.cookie.domain' => '',
-    'session.cookie.secure' => true,
+    'session.cookie.secure' => false, // Should be true in production when using HTTPS.
     'session.cookie.samesite' => $httpUtils->canSetSameSiteNone() ? 'None' : null,
 
     'session.phpsession.cookiename' => 'SMARTSAMLTestServer',
