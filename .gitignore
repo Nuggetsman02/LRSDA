@@ -5,3 +5,5 @@ vendor/
 config.json
 data/*
 src/data/*
+simplesamlphp/cache/*
+simplesamlphp/log/*
