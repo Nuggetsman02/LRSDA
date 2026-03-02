@@ -12,6 +12,40 @@
     const todayISO = new Date().toISOString().slice(0, 10);
     if(endDate) endDate.value = todayISO;
 
+    // --- DONNÉES EN DUR : Descriptions (Basées sur registry.json) ---
+    const registryDescriptions = {
+        verbs: {
+            "completed": "l'acteur a terminé l'objet (Test,Survey) associé.",
+            "received": "l'acteur a reçu un élément (Survey, Feeback, Message, ...) associé.",
+            "accessed": "l'Acteur a accédé à un l'élément associé (un Resultat, un Feedback, un Survey), il l'a 'visualisé' et n'a rien fait d'autre",
+            "acknowledge": "L'acteur s'est vu présenté l'objet associé.",
+            "answered": "L'acteur à répondu à la question référencée par l'object associé.",
+            "enrolled": "L'utilisateur a accepté les condition d'utilisation du service.",
+            "login": "L'utilisateur s'est connecté à l'application",
+            "logout": "L'utilisateur s'est déconnecté et/ou a cloturé sa session dans l'application",
+            "disconnect": "L'utilisateur à désactivé son affiliation au service.",
+            "gave": "L'utilisateur à donné une information.",
+            "updated": "Le verbe \"update\" indique que l'acteur a modifié l'objet."
+        },
+        activities: {
+            "ULLAMobileApp": "Un objet dédié aux interactions avec l'app mobile ULLA",
+            "ULLAMobileAppFeed": "Un objet dédié aux interactions avec le feed de l'app mobile ULLA",
+            "Moods": "Un objet dédié aux émotions",
+            "GenericObject": "Un objet générique sans résultat.",
+            "GenericObjectWithResult": "Un objet générique avec résultat.",
+            "Assessment": "Un test, QCM ou QROL",
+            "AssessmentPart": "Une partie de test QCM.",
+            "OpenAnswerQuestion": "Une question à réponse ouverte longue",
+            "OpenAnswerQuestionCriteria": "Un critère associé à une question à réponse ouverte longue",
+            "Survey": "Une enquête à caractère pédagogique orientée LA",
+            "SurveyQuestion": "Une question associée à une enquête à caractère pédagogique orientée LA",
+            "Feedback": "Un Feedback SMART",
+            "FeedbackPart": "Un Feedback SMART pour une partie de test",
+            "FeedbackMessage": "Un message associé à Feedback SMART",
+            "Message": "Un message à destination des étudiants"
+        }
+    };
+
     // --- 1. FONCTIONS UTILITAIRES ---
 
     /**
@@ -19,30 +53,20 @@
      * @param {string} dropdownName - Le nom affiché par défaut (ex: "Verbes", "Activités")
      */
     function getValuesFromDropdown(dropdownName) {
-    let result = [];
-    dropdowns.forEach(container => {
-        const btnText = container.querySelector('.btn-text');
-        // On vérifie que c'est le bon menu (Verbes ou Activités)
-        if (btnText && btnText.getAttribute('data-default') === dropdownName) {
-            const checkedItems = container.querySelectorAll('.item.checked');
-            checkedItems.forEach(item => {
-                // On récupère le "data-name" défini dans votre HTML
-                const name = item.getAttribute('data-name');
-                if (name) {
-                    result.push(name);
-                }
-            });
-        }
-    });
-    return result; // Retourne maintenant ex: ["login", "logout"]
-}
-
-    /**
-     * Récupère simplement le texte pour l'affichage du tableau de prévisualisation
-     */
-    function getSelectedLabels() {
-        return Array.from(document.querySelectorAll('.item.checked .item-text'))
-            .map(span => span.textContent);
+        let result = [];
+        dropdowns.forEach(container => {
+            const btnText = container.querySelector('.btn-text');
+            if (btnText && btnText.getAttribute('data-default') === dropdownName) {
+                const checkedItems = container.querySelectorAll('.item.checked');
+                checkedItems.forEach(item => {
+                    const name = item.getAttribute('data-name');
+                    if (name) {
+                        result.push(name);
+                    }
+                });
+            }
+        });
+        return result; 
     }
 
     /**
@@ -57,46 +81,135 @@
         }
     }
 
-    // --- 2. INTERFACE : TABLEAU D'APERÇU ---
+    // --- 2. INTERFACE : TABLEAU D'APERÇU ET DESCRIPTIONS ---
+
+    function renderDescriptions() {
+        const descriptionsContainer = document.getElementById('descriptions-container');
+        const descriptionsList = document.getElementById('descriptions-list');
+        if (!descriptionsContainer || !descriptionsList) return;
+
+        descriptionsList.innerHTML = '';
+        const selectedVerbs = getValuesFromDropdown('Verbes');
+        const selectedActivities = getValuesFromDropdown('Activités');
+
+        if (selectedVerbs.length === 0 && selectedActivities.length === 0) {
+            descriptionsContainer.style.display = 'none';
+            return;
+        }
+
+        descriptionsContainer.style.display = 'block';
+
+        selectedVerbs.forEach(verb => {
+            if (registryDescriptions.verbs[verb]) {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>Verbe "${verb}" :</strong> ${registryDescriptions.verbs[verb]}`;
+                descriptionsList.appendChild(li);
+            }
+        });
+
+        selectedActivities.forEach(act => {
+            if (registryDescriptions.activities[act]) {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>Activité "${act}" :</strong> ${registryDescriptions.activities[act]}`;
+                descriptionsList.appendChild(li);
+            }
+        });
+    }
 
     function renderTable() {
+        const headerRow = document.getElementById('table-header');
+        const body = document.getElementById('table-body');
+        
         if (!headerRow || !body) return;
 
         headerRow.innerHTML = '';
         body.innerHTML = '';
 
-        const selectedLabels = getSelectedLabels();
+        const selectedVerbs = getValuesFromDropdown('Verbes');
+        const selectedActivities = getValuesFromDropdown('Activités');
+        
+        // Structure exacte des colonnes de ton CSV
+        const xapiColumns = [
+            'Statement ID', 'Actor Type', 'Actor Account Name', 'Actor Account HomePage', 
+            'Verb ID', 'Verb Name', 'Verb Display', 'Timestamp', 'Object Type', 
+            'Object ID', 'Object Definition', 'Object Name', 'Stored', 
+            'Authority Type', 'Authority Name', 'Authority Account Name', 
+            'Authority Account HomePage', 'Version'
+        ];
 
-        // Colonne d'index
-        const indexTh = document.createElement('th');
-        indexTh.textContent = '#';
-        headerRow.appendChild(indexTh);
-
-        if (selectedLabels.length === 0) {
+        if (selectedVerbs.length === 0 && selectedActivities.length === 0) {
             const emptyTh = document.createElement('th');
             emptyTh.textContent = "Aperçu des données (sélectionnez des filtres)";
             headerRow.appendChild(emptyTh);
             return;
         }
 
-        // Colonnes dynamiques
-        selectedLabels.forEach(text => {
+        // Ajout des en-têtes
+        xapiColumns.forEach(text => {
             const th = document.createElement('th');
             th.textContent = text;
             headerRow.appendChild(th);
         });
 
-        // Remplissage factice
-        for (let r = 1; r <= 5; r++) {
+        // --- NOUVELLE LOGIQUE : Une ligne par sélection (Indépendance totale) ---
+        let itemsToRender = [];
+        
+        // On ajoute d'abord toutes les lignes dédiées aux verbes
+        selectedVerbs.forEach(v => {
+            itemsToRender.push({ verb: v, activity: 'N/A' });
+        });
+        
+        // On ajoute ensuite toutes les lignes dédiées aux activités
+        selectedActivities.forEach(a => {
+            itemsToRender.push({ verb: 'N/A', activity: a });
+        });
+
+        // Remplissage avec descriptions textuelles et valeurs sélectionnées
+        itemsToRender.forEach((combo) => {
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${r}</td>`;
-            selectedLabels.forEach(text => {
+            
+            // Valeurs dynamiques : on indique qu'il n'y a pas de filtre croisé sur cette ligne
+            const verbName = combo.verb !== 'N/A' ? combo.verb : '(Nom du verbe)';
+            const activityName = combo.activity !== 'N/A' ? combo.activity : '(Nom de l\'activité)';
+
+            // Création des données descriptives pour chaque colonne
+            const rowData = [
+                "ID du statement",                         // Statement ID
+                "Agent",                                   // Actor Type
+                "Hash pseudonymisé de l'étudiant",         // Actor Account Name
+                "URL du domaine",                          // Actor Account HomePage
+                "URL du verbe",                            // Verb ID
+                verbName,                                  // Verb Name (DYNAMIQUE)
+                "Texte lié au verbe",                      // Verb Display
+                "Date et heure de l'action",               // Timestamp
+                "Activity",                                // Object Type
+                "URL de l'activité",                       // Object ID
+                "Catégorie de l'activité",                 // Object Definition
+                activityName,                              // Object Name (DYNAMIQUE)
+                "Date d'enregistrement",                   // Stored
+                "Agent",                                   // Authority Type
+                "Nom de l'application cliente",            // Authority Name
+                "Compte technique LRS",                    // Authority Account Name
+                "URL de l'autorité",                       // Authority Account HomePage
+                "1.0.0"                                    // Version
+            ];
+
+            // Insertion dans le tableau
+            rowData.forEach(cellData => {
                 const td = document.createElement('td');
-                td.textContent = `${text} ${r}`;
+                
+                // On met en évidence UNIQUEMENT la valeur active de la ligne
+                if ((cellData === verbName && combo.verb !== 'N/A') || 
+                    (cellData === activityName && combo.activity !== 'N/A')) {
+                    td.innerHTML = `<strong style="color: #000;">${cellData}</strong>`;
+                } else {
+                    td.textContent = cellData;
+                }
                 tr.appendChild(td);
             });
+
             body.appendChild(tr);
-        }
+        });
     }
 
     // --- 3. GESTION DES INTERACTIONS (Menus Déroulants) ---
@@ -128,6 +241,7 @@
                 btnText.innerText = checkedCount > 0 ? `${checkedCount} Sélectionné(s)` : defaultText;
 
                 renderTable();
+                renderDescriptions(); // Mise à jour des descriptions
                 checkDownloadButtonState();
             });
         });
@@ -144,6 +258,7 @@
                 label.innerText = `${count} Sélectionné(s)`;
             });
             renderTable();
+            renderDescriptions(); // Mise à jour des descriptions
             checkDownloadButtonState();
         });
     }
@@ -156,6 +271,7 @@
                 btnText.innerText = btnText.getAttribute("data-default");
             });
             renderTable();
+            renderDescriptions(); // Mise à jour des descriptions
             checkDownloadButtonState();
         });
     }
@@ -164,14 +280,8 @@
 
     if (downloadBtn) {
         downloadBtn.addEventListener('click', (e) => {
-            // e.preventDefault(); // Utile si le bouton est dans un <form> existant
-
             const verbsList = getValuesFromDropdown('Verbes');
             const objectsList = getValuesFromDropdown('Activités'); 
-
-            // DEBUG : Vérifiez ceci dans la console du navigateur (F12) avant l'envoi
-            // console.log("Verbes envoyés :", verbsList); // Doit afficher Array(2) ["...", "..."]
-            // console.log("Type :", typeof verbsList);    // Doit afficher "object" (car un array est un objet en JS)
 
             const payload = {
                 start_date: startDate ? startDate.value : '',
@@ -206,6 +316,7 @@
 
     // Initialisation au chargement de la page
     renderTable();
+    renderDescriptions();
     checkDownloadButtonState();
 
 })();
