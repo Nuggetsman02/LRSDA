@@ -327,6 +327,11 @@
         });
     }
 
+    if(disconnectBtn) {
+        disconnectBtn.addEventListener('click', () => {
+            window.location.href = '/logout';
+        });
+    }
 
     // Initialisation au chargement de la page
     renderTable();
