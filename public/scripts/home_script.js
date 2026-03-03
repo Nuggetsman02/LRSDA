@@ -10,9 +10,9 @@
 
     // Initialisation des dates (Aujourd'hui par défaut pour la fin)
     const todayISO = new Date().toISOString().slice(0, 10);
-    if(endDate) endDate.value = todayISO;
+    if (endDate) endDate.value = todayISO;
 
-    // --- DONNÉES EN DUR : Descriptions (Basées sur registry.json) ---
+    // --- Descriptions des verbes et activités ---
     const registryDescriptions = {
         verbs: {
             "completed": "l'acteur a terminé l'objet (Test,Survey) associé.",
@@ -46,11 +46,11 @@
         }
     };
 
-    // --- 1. FONCTIONS UTILITAIRES ---
+    // --- METHODES ---
 
     /**
      * Récupère les data-name des items cochés dans un menu spécifique
-     * @param {string} dropdownName - Le nom affiché par défaut (ex: "Verbes", "Activités")
+     * @param {string} dropdownName - Le nom affiché par défaut
      */
     function getValuesFromDropdown(dropdownName) {
         let result = [];
@@ -66,7 +66,7 @@
                 });
             }
         });
-        return result; 
+        return result;
     }
 
     /**
@@ -81,7 +81,7 @@
         }
     }
 
-    // --- 2. INTERFACE : TABLEAU D'APERÇU ET DESCRIPTIONS ---
+    // --- INTERFACE : TABLEAU D'APERÇU ET DESCRIPTIONS ---
 
     function renderDescriptions() {
         const descriptionsContainer = document.getElementById('descriptions-container');
@@ -119,7 +119,7 @@
     function renderTable() {
         const headerRow = document.getElementById('table-header');
         const body = document.getElementById('table-body');
-        
+
         if (!headerRow || !body) return;
 
         headerRow.innerHTML = '';
@@ -127,14 +127,27 @@
 
         const selectedVerbs = getValuesFromDropdown('Verbes');
         const selectedActivities = getValuesFromDropdown('Activités');
-        
-        // Structure exacte des colonnes de ton CSV
+
+        // Structure des colonnes du tableau correspondant au à celles du CSV
         const xapiColumns = [
-            'Statement ID', 'Actor Type', 'Actor Account Name', 'Actor Account HomePage', 
-            'Verb ID', 'Verb Name', 'Verb Display', 'Timestamp', 'Object Type', 
-            'Object ID', 'Object Definition', 'Object Name', 'Stored', 
-            'Authority Type', 'Authority Name', 'Authority Account Name', 
-            'Authority Account HomePage', 'Version'
+            // 'Statement ID',
+            'Actor Type',
+            'Pseudonymized Actor Account Name',
+            'Actor Account HomePage',
+            // 'Verb ID',
+            'Verb Name',
+            'Verb Display',
+            'Timestamp',
+            'Object Type',
+            // 'Object ID',
+            // 'Object Definition',
+            'Object Name',
+            // 'Stored',
+            'Authority Type',
+            'Authority Name',
+            'Authority Account Name',
+            // 'Authority Account HomePage',
+            // 'Version'
         ];
 
         if (selectedVerbs.length === 0 && selectedActivities.length === 0) {
@@ -151,15 +164,14 @@
             headerRow.appendChild(th);
         });
 
-        // --- NOUVELLE LOGIQUE : Une ligne par sélection (Indépendance totale) ---
         let itemsToRender = [];
-        
-        // On ajoute d'abord toutes les lignes dédiées aux verbes
+
+        // Ajout des les lignes des verbes
         selectedVerbs.forEach(v => {
             itemsToRender.push({ verb: v, activity: 'N/A' });
         });
-        
-        // On ajoute ensuite toutes les lignes dédiées aux activités
+
+        // Ajout des lignes des activités
         selectedActivities.forEach(a => {
             itemsToRender.push({ verb: 'N/A', activity: a });
         });
@@ -167,39 +179,39 @@
         // Remplissage avec descriptions textuelles et valeurs sélectionnées
         itemsToRender.forEach((combo) => {
             const tr = document.createElement('tr');
-            
-            // Valeurs dynamiques : on indique qu'il n'y a pas de filtre croisé sur cette ligne
+
+            // Valeurs dynamiques pour les colonnes "Verb Name" et "Object Name"
             const verbName = combo.verb !== 'N/A' ? combo.verb : '(Nom du verbe)';
             const activityName = combo.activity !== 'N/A' ? combo.activity : '(Nom de l\'activité)';
 
             // Création des données descriptives pour chaque colonne
             const rowData = [
-                "ID du statement",                         // Statement ID
+                // "ID du statement",                         // Statement ID
                 "Agent",                                   // Actor Type
                 "Hash pseudonymisé de l'étudiant",         // Actor Account Name
                 "URL du domaine",                          // Actor Account HomePage
-                "URL du verbe",                            // Verb ID
+                // "URL du verbe",                            // Verb ID
                 verbName,                                  // Verb Name (DYNAMIQUE)
                 "Texte lié au verbe",                      // Verb Display
                 "Date et heure de l'action",               // Timestamp
                 "Activity",                                // Object Type
-                "URL de l'activité",                       // Object ID
-                "Catégorie de l'activité",                 // Object Definition
+                // "URL de l'activité",                       // Object ID
+                // "Catégorie de l'activité",                 // Object Definition
                 activityName,                              // Object Name (DYNAMIQUE)
-                "Date d'enregistrement",                   // Stored
+                // "Date d'enregistrement",                   // Stored
                 "Agent",                                   // Authority Type
                 "Nom de l'application cliente",            // Authority Name
                 "Compte technique LRS",                    // Authority Account Name
-                "URL de l'autorité",                       // Authority Account HomePage
-                "1.0.0"                                    // Version
+                // "URL de l'autorité",                       // Authority Account HomePage
+                // "1.0.0"                                    // Version
             ];
 
             // Insertion dans le tableau
             rowData.forEach(cellData => {
                 const td = document.createElement('td');
-                
-                // On met en évidence UNIQUEMENT la valeur active de la ligne
-                if ((cellData === verbName && combo.verb !== 'N/A') || 
+
+                // Mise en évidence de la valeur active de la ligne
+                if ((cellData === verbName && combo.verb !== 'N/A') ||
                     (cellData === activityName && combo.activity !== 'N/A')) {
                     td.innerHTML = `<strong style="color: #000;">${cellData}</strong>`;
                 } else {
@@ -212,7 +224,7 @@
         });
     }
 
-    // --- 3. GESTION DES INTERACTIONS (Menus Déroulants) ---
+    // --- GESTION DES INTERACTIONS ---
 
     dropdowns.forEach(container => {
         const selectBtn = container.querySelector(".select-btn");
@@ -235,7 +247,7 @@
                 e.stopPropagation();
                 item.classList.toggle("checked");
 
-                // Mise à jour du texte du bouton (ex: "3 Sélectionné(s)")
+                // Mise à jour du texte du bouton
                 const checkedCount = container.querySelectorAll(".checked").length;
                 const defaultText = btnText.getAttribute("data-default");
                 btnText.innerText = checkedCount > 0 ? `${checkedCount} Sélectionné(s)` : defaultText;
@@ -247,7 +259,13 @@
         });
     });
 
-    // --- 4. BOUTONS GLOBAUX ---
+    // Fermeture des menus au clic extérieur
+    window.addEventListener("click", () => {
+        dropdowns.forEach(c => c.querySelector(".select-btn").classList.remove("open"));
+    });
+
+
+    // --- BOUTONS GLOBAUX ---
 
     if (selectAllBtn) {
         selectAllBtn.addEventListener('click', () => {
@@ -276,12 +294,12 @@
         });
     }
 
-    // --- 5. EXPORT VERS LE SERVEUR (PHP) ---
+    // --- EXPORT VERS LE SERVEUR ---
 
     if (downloadBtn) {
         downloadBtn.addEventListener('click', (e) => {
             const verbsList = getValuesFromDropdown('Verbes');
-            const objectsList = getValuesFromDropdown('Activités'); 
+            const objectsList = getValuesFromDropdown('Activités');
 
             const payload = {
                 start_date: startDate ? startDate.value : '',
@@ -289,7 +307,7 @@
                 verbs: verbsList,
                 objects: objectsList
             };
-            
+
             // Création du formulaire invisible pour l'envoi POST
             const form = document.createElement('form');
             form.method = 'POST';
@@ -302,17 +320,13 @@
 
             form.appendChild(input);
             document.body.appendChild(form);
-            
-            form.submit(); // Envoi réel
-            
+
+            form.submit(); // Envoi
+
             document.body.removeChild(form);
         });
     }
 
-    // Fermeture des menus au clic extérieur
-    window.addEventListener("click", () => {
-        dropdowns.forEach(c => c.querySelector(".select-btn").classList.remove("open"));
-    });
 
     // Initialisation au chargement de la page
     renderTable();
