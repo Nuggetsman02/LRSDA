@@ -21,6 +21,10 @@ class StatementObject
         $this->name = $name;
     }
 
+    // --------
+    // Getters & Setters
+    // --------
+
     public function getObjectType(): string
     {
         return $this->objectType;

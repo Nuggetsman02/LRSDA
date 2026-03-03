@@ -17,6 +17,10 @@ class StatementAccount
         $this->homePage = $homePage;
     }
 
+    // --------
+    // Getters & Setters
+    // --------
+    
     public function getName(): string
     {
         return $this->name;

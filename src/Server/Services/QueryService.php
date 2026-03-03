@@ -15,6 +15,10 @@ class QueryService
         $this->registry = XapiRegistry::getInstance();
     }
 
+    // --------
+    // METHODES PUBLIQUES
+    // --------
+
     /**
      * Construit le filtre MongoDB pour la Connection API à partir des filtres bruts.
      */

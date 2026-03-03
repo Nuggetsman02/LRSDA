@@ -19,6 +19,10 @@ class StatementAuthority
         $this->account = $account;
     }
 
+    // --------
+    // Getters & Setters
+    // --------
+
     public function getObjectType(): string
     {
         return $this->objectType;

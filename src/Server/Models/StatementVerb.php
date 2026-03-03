@@ -19,6 +19,10 @@ class StatementVerb
         $this->name = $name;
     }
 
+    // --------
+    // Getters & Setters
+    // --------
+
     public function getId(): string
     {
         return $this->id;

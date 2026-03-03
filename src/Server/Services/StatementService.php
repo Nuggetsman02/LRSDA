@@ -26,8 +26,11 @@ class StatementService
     {
         $this->client = $client;
         $this->registry = $registry;
-
     }
+    
+    // --------
+    // METHODES PUBLIQUES
+    // --------
 
     /**
      * Retourne une liste d'objets Statement
@@ -191,30 +194,38 @@ class StatementService
         // Écriture des données des statements
         foreach ($statements as $statement) {
             fputcsv($output, [
+                // --- STATEMENT ---
                 // $statement->getId(),
 
+                // --- ACTOR ---
                 $statement->getActor()->getObjectType(),
                 $statement->getActor()->getAccount()->getName(),
                 $statement->getActor()->getAccount()->getHomePage(),
 
+                // --- VERB ---
                 // $statement->getVerb()->getId(),
                 $statement->getVerb()->getName(),
                 $statement->getVerb()->getDisplay(),
-                
+
+                // --- TIMESTAMP ---
                 $statement->getTimestamp()->format('c'),
 
+                // --- OBJECT ---
                 $statement->getObject()->getObjectType(),
                 // $statement->getObject()->getId(),
                 // $statement->getObject()->getDefinition(),
                 $statement->getObject()->getName(),
 
+                // --- STORED ---
                 // $statement->getStored()->format('c'),
 
+                // --- AUTHORITY ---
                 $statement->getAuthority()->getObjectType(),
                 $statement->getAuthority()->getName(),
                 $statement->getAuthority()->getAccount()->getName(),
                 // $statement->getAuthority()->getAccount()->getHomePage(),
 
+                // --- VERSION ---
                 // $statement->getVersion()
             ]);
         }

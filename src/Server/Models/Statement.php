@@ -40,7 +40,7 @@ class Statement
     }
 
     // --------
-    // Getters 
+    // Getters & Setters
     // --------
 
     public function getId(): string

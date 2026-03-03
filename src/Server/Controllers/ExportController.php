@@ -18,6 +18,10 @@ class ExportController
         $this->queryService = $queryService;
     }
 
+    // --------
+    // METHODES PUBLIQUES 
+    // --------
+
     public function export(Request $request, Response $response): Response
     {
         $params = $request->getParsedBody();
