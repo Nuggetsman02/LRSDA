@@ -3,7 +3,7 @@
 namespace LRSDA\Server\Models;
 
 /**
- * Représente un acteur dans un Statement xAPI (version simplifiée)
+ * Représente un acteur dans un Statement xAPI
  */
 
 class StatementActor

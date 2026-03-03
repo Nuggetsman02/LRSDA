@@ -3,7 +3,7 @@
 namespace LRSDA\Server\Models;
 
 /**
- * Représente un compte dans un Statement xAPI (version simplifiée)
+ * Représente un compte dans un Statement xAPI
  */
 
 class StatementAccount

@@ -5,7 +5,7 @@ namespace LRSDA\Server\Models;
 use DateTime;
 
 /**
- * Représente un Statement xAPI (version simplifiée)
+ * Représente un Statement xAPI
  */
 
 class Statement
