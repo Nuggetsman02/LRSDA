@@ -7,6 +7,7 @@
     const startDate = document.getElementById('start-date');
     const endDate = document.getElementById('end-date');
     const dropdowns = document.querySelectorAll(".container-dropdown");
+    const logoutBtn = document.getElementById('logout-btn');
 
     // Initialisation des dates (Aujourd'hui par défaut pour la fin)
     const todayISO = new Date().toISOString().slice(0, 10);
@@ -327,9 +328,9 @@
         });
     }
 
-    if(disconnectBtn) {
-        disconnectBtn.addEventListener('click', () => {
-            window.location.href = '/logout';
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            window.location.href = '/api/logout';
         });
     }
 

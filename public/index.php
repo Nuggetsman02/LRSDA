@@ -2,6 +2,7 @@
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use LRSDA\Server\Controllers\LogoutController;
 use LRSDA\Server\Controllers\ExportController;
 use LRSDA\Server\Middlewares\SamlAuthMiddleware;
 use LRSDA\Server\Services\StatementService;
@@ -53,6 +54,7 @@ $containerBuilder->addDefinitions([
     // Autowiring
     StatementService::class => \DI\autowire(StatementService::class),
     ExportController::class => \DI\autowire(ExportController::class),
+    LogoutController::class => \DI\autowire(LogoutController::class),
     QueryService::class => \DI\autowire(QueryService::class),
 ]);
 
@@ -97,6 +99,6 @@ $app->get('/', function (Request $request, Response $response) {
 // Chargement des fichiers de routes externes
 // call_user_func(require __DIR__ . '/../src/Routes/route_test.php', $app);
 call_user_func(require __DIR__ . '/../src/Routes/export_route.php', $app);
-
+call_user_func(require __DIR__ . '/../src/Routes/logout_route.php', $app);
 
 $app->run();
