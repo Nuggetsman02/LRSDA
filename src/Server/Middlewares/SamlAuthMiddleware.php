@@ -5,9 +5,7 @@ namespace LRSDA\Server\Middlewares;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use GuzzleHttp\Psr7\Response as Psr7Response;
 use SimpleSAML\Auth\Simple;
-use SimpleSAML\Session;
 
 
 class SamlAuthMiddleware
