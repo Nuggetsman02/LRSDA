@@ -97,7 +97,6 @@ $app->get('/', function (Request $request, Response $response) {
 ->add(SamlAuthMiddleware::class);
 
 // Chargement des fichiers de routes externes
-// call_user_func(require __DIR__ . '/../src/Routes/route_test.php', $app);
 call_user_func(require __DIR__ . '/../src/Routes/export_route.php', $app);
 call_user_func(require __DIR__ . '/../src/Routes/logout_route.php', $app);
 

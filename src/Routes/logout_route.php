@@ -1,8 +1,8 @@
 <?php
 
-use LRSDA\Server\Controllers\ExportController;
+use LRSDA\Server\Controllers\LogoutController;
 use Slim\app;
 
 return function(App $app){
-    $app->get('/api/logout', [ExportController::class, 'logout']);
+    $app->get('/api/logout', [LogoutController::class, 'logout']);
 };

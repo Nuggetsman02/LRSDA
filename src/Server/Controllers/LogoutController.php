@@ -10,10 +10,15 @@ class LogoutController
 {
     public function logout(Request $request, Response $response): Response
     {
-        $auth = new Simple('default-sp');
+        try {
+            $auth = new Simple('default-sp');
+            $auth->logout('/');
+        } catch (\Exception $e) {
+            // Log the error if needed
+            error_log("Logout error: " . $e->getMessage());
+        }
 
-        $auth->logout('/'); 
-        
+        // Redirection vers la page d'accueil après la déconnexion
         return $response->withHeader('Location', '/')->withStatus(302);
     }
 }

@@ -183,12 +183,12 @@ class StatementService
             // 'Object ID',
             // 'Object Definition',
             'Object Name',
-            'Stored',
+            // 'Stored',
             'Authority Type',
             'Authority Name',
             // 'Authority Account Name',
             // 'Authority Account HomePage',
-            'Version'
+            // 'Version'
         ]);
 
         // Écriture des données des statements
@@ -217,7 +217,7 @@ class StatementService
                 $statement->getObject()->getName(),
 
                 // --- STORED ---
-                $statement->getStored()->format('c'),
+                // $statement->getStored()->format('c'),
 
                 // --- AUTHORITY ---
                 $statement->getAuthority()->getObjectType(),
@@ -226,7 +226,7 @@ class StatementService
                 // $statement->getAuthority()->getAccount()->getHomePage(),
 
                 // --- VERSION ---
-                $statement->getVersion()
+                // $statement->getVersion()
             ]);
         }
 

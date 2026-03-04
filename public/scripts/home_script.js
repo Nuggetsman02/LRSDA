@@ -7,7 +7,7 @@
     const startDate = document.getElementById('start-date');
     const endDate = document.getElementById('end-date');
     const dropdowns = document.querySelectorAll(".container-dropdown");
-    const logoutBtn = document.getElementById('logout-btn');
+    const logoutBtn = document.getElementById('logoutBtn');
 
     // Initialisation des dates (Aujourd'hui par défaut pour la fin)
     const todayISO = new Date().toISOString().slice(0, 10);
@@ -199,12 +199,12 @@
                 // "URL de l'activité",                    // Object ID
                 // "Catégorie de l'activité",              // Object Definition
                 activityName,                              // Object Name (DYNAMIQUE)
-                "Date d'enregistrement",                   // Stored
+                // "Date d'enregistrement",                // Stored
                 "Agent",                                   // Authority Type
                 "Nom de l'application cliente",            // Authority Name
                 // "Compte technique LRS",                 // Authority Account Name
                 // "URL de l'autorité",                    // Authority Account HomePage
-                "1.0.0"                                    // Version
+                // "1.0.0"                                 // Version
             ];
 
             // Insertion dans le tableau
