@@ -171,41 +171,41 @@ class StatementService
 
         // En-têtes CSV
         fputcsv($output, [
-            // 'Statement ID',
+            'Statement ID',
             'Actor Type',
             'Pseudonymized Actor Account Name',
-            'Actor Account HomePage',
+            // 'Actor Account HomePage',
             // 'Verb ID',
             'Verb Name',
-            'Verb Display',
+            // 'Verb Display',
             'Timestamp',
             'Object Type',
             // 'Object ID',
             // 'Object Definition',
             'Object Name',
-            // 'Stored',
+            'Stored',
             'Authority Type',
             'Authority Name',
-            'Authority Account Name',
+            // 'Authority Account Name',
             // 'Authority Account HomePage',
-            // 'Version'
+            'Version'
         ]);
 
         // Écriture des données des statements
         foreach ($statements as $statement) {
             fputcsv($output, [
                 // --- STATEMENT ---
-                // $statement->getId(),
+                $statement->getId(),
 
                 // --- ACTOR ---
                 $statement->getActor()->getObjectType(),
                 $statement->getActor()->getAccount()->getName(),
-                $statement->getActor()->getAccount()->getHomePage(),
+                // $statement->getActor()->getAccount()->getHomePage(),
 
                 // --- VERB ---
                 // $statement->getVerb()->getId(),
                 $statement->getVerb()->getName(),
-                $statement->getVerb()->getDisplay(),
+                // $statement->getVerb()->getDisplay(),
 
                 // --- TIMESTAMP ---
                 $statement->getTimestamp()->format('c'),
@@ -217,16 +217,16 @@ class StatementService
                 $statement->getObject()->getName(),
 
                 // --- STORED ---
-                // $statement->getStored()->format('c'),
+                $statement->getStored()->format('c'),
 
                 // --- AUTHORITY ---
                 $statement->getAuthority()->getObjectType(),
                 $statement->getAuthority()->getName(),
-                $statement->getAuthority()->getAccount()->getName(),
+                // $statement->getAuthority()->getAccount()->getName(),
                 // $statement->getAuthority()->getAccount()->getHomePage(),
 
                 // --- VERSION ---
-                // $statement->getVersion()
+                $statement->getVersion()
             ]);
         }
 

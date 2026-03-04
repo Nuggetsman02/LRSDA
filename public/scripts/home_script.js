@@ -131,24 +131,24 @@
 
         // Structure des colonnes du tableau correspondant au à celles du CSV
         const xapiColumns = [
-            // 'Statement ID',
+            'Statement ID',
             'Actor Type',
             'Pseudonymized Actor Account Name',
-            'Actor Account HomePage',
+            // 'Actor Account HomePage',
             // 'Verb ID',
             'Verb Name',
-            'Verb Display',
+            // 'Verb Display',
             'Timestamp',
             'Object Type',
             // 'Object ID',
             // 'Object Definition',
             'Object Name',
-            // 'Stored',
+            'Stored',
             'Authority Type',
             'Authority Name',
-            'Authority Account Name',
+            // 'Authority Account Name',
             // 'Authority Account HomePage',
-            // 'Version'
+            'Version'
         ];
 
         if (selectedVerbs.length === 0 && selectedActivities.length === 0) {
@@ -182,29 +182,29 @@
             const tr = document.createElement('tr');
 
             // Valeurs dynamiques pour les colonnes "Verb Name" et "Object Name"
-            const verbName = combo.verb !== 'N/A' ? combo.verb : '(Nom du verbe)';
-            const activityName = combo.activity !== 'N/A' ? combo.activity : '(Nom de l\'activité)';
+            const verbName = combo.verb !== 'N/A' ? combo.verb : 'Nom du verbe';
+            const activityName = combo.activity !== 'N/A' ? combo.activity : 'Nom de l\'objet';
 
             // Création des données descriptives pour chaque colonne
             const rowData = [
-                // "ID du statement",                         // Statement ID
-                "Agent",                                   // Actor Type
+                "ID du statement",                         // Statement ID
+                "Agent ou Group",                          // Actor Type
                 "Hash pseudonymisé de l'étudiant",         // Actor Account Name
-                "URL du domaine",                          // Actor Account HomePage
-                // "URL du verbe",                            // Verb ID
+                // "URL du domaine",                       // Actor Account HomePage
+                // "URL du verbe",                         // Verb ID
                 verbName,                                  // Verb Name (DYNAMIQUE)
-                "Texte lié au verbe",                      // Verb Display
+                // "Texte lié au verbe",                   // Verb Display
                 "Date et heure de l'action",               // Timestamp
-                "Activity",                                // Object Type
-                // "URL de l'activité",                       // Object ID
-                // "Catégorie de l'activité",                 // Object Definition
+                "Type de l'objet",                         // Object Type
+                // "URL de l'activité",                    // Object ID
+                // "Catégorie de l'activité",              // Object Definition
                 activityName,                              // Object Name (DYNAMIQUE)
-                // "Date d'enregistrement",                   // Stored
+                "Date d'enregistrement",                   // Stored
                 "Agent",                                   // Authority Type
                 "Nom de l'application cliente",            // Authority Name
-                "Compte technique LRS",                    // Authority Account Name
-                // "URL de l'autorité",                       // Authority Account HomePage
-                // "1.0.0"                                    // Version
+                // "Compte technique LRS",                 // Authority Account Name
+                // "URL de l'autorité",                    // Authority Account HomePage
+                "1.0.0"                                    // Version
             ];
 
             // Insertion dans le tableau
