@@ -145,10 +145,10 @@
             'Object Name',
             'Stored',
             'Authority Type',
-            'Authority Name',
+            // 'Authority Name',
             // 'Authority Account Name',
             // 'Authority Account HomePage',
-            'Version'
+            // 'Version'
         ];
 
         if (selectedVerbs.length === 0 && selectedActivities.length === 0) {

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="../library/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <script src="../scripts/home_script.js" type="text/javascript"></script>
     <title>LRS DataAnalyst</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -19,7 +20,7 @@
             </a>
         </div>
         <div class="navbar-right">
-            <button class="history-btn" id="historyBtn">Historique des requtes</button>
+            <!-- <button class="history-btn" id="historyBtn">Historique des requtes</button> -->
             <button class="logout-btn" id="logoutBtn">Se déconnecter</button>
         </div>
     </header>
@@ -265,17 +266,15 @@
             <div class="actions-bottom">
                 <button id="download-csv" disabled>Télécharger .csv</button>
             </div>
-            
+
             <div id="descriptions-container" class="descriptions-box">
                 <h3 style="margin-top: 0;">Descriptions des filtres sélectionnés</h3>
                 <ul id="descriptions-list" style="margin-bottom: 0;"></ul>
             </div>
-
-            <!-- <div class="actions-bottom">
-                <button id="test-btn"><a href="test.html">Test route</a></button>
-            </div> -->
+            
         </section>
     </main>
+    <script src="../scripts/home_script.js"></script>
 </body>
 
 </html>
