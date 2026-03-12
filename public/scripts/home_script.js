@@ -143,9 +143,9 @@
             // 'Object ID',
             // 'Object Definition',
             'Object Name',
-            'Stored',
+            // 'Stored',
             'Authority Type',
-            // 'Authority Name',
+            'Authority Name',
             // 'Authority Account Name',
             // 'Authority Account HomePage',
             // 'Version'
