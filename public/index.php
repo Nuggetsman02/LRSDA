@@ -93,8 +93,8 @@ $app->get('/', function (Request $request, Response $response) {
     $response->getBody()->write($html);
 
     return $response;
-});
-// ->add(SamlAuthMiddleware::class);
+})
+->add(SamlAuthMiddleware::class);
 
 // Chargement des fichiers de routes externes
 call_user_func(require __DIR__ . '/../src/Routes/export_route.php', $app);
